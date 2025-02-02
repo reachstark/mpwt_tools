@@ -1,7 +1,7 @@
 import 'package:estimation_list_generator/controllers/app_controller.dart';
 import 'package:estimation_list_generator/controllers/db_controller.dart';
 import 'package:estimation_list_generator/controllers/initializer.dart';
-import 'package:estimation_list_generator/screens/winner/winner_view.dart';
+import 'package:estimation_list_generator/screens/winner/index_winner_view.dart';
 import 'package:estimation_list_generator/utils/app_colors.dart';
 import 'package:estimation_list_generator/utils/app_theme.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
@@ -180,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 case 1:
                                   return VerifyPage();
                                 case 2:
-                                  return const WinnerView();
+                                  return const IndexWinnerView();
                                 case 3:
                                   return const FollowEstimation();
                                 default:

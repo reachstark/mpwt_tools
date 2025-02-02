@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:estimation_list_generator/models/lottery_event.dart';
 import 'package:estimation_list_generator/utils/show_loading.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -10,6 +11,7 @@ class DbController extends GetxController {
   static DbController get to => Get.find();
 
   final SupabaseClient supabase = Supabase.instance.client;
+  final searchController = TextEditingController();
 
   RxList<LotteryEvent> lotteryEvents = <LotteryEvent>[].obs;
   Rx<LotteryEvent> selectedLotteryEvent = LotteryEvent(

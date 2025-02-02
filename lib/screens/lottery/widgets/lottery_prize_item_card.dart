@@ -1,8 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:estimation_list_generator/models/lottery_event.dart';
 import 'package:estimation_list_generator/utils/app_colors.dart';
 import 'package:estimation_list_generator/utils/app_images.dart';
-import 'package:estimation_list_generator/utils/app_theme.dart';
 import 'package:estimation_list_generator/widgets/dialogs/add_lottery_prize_item.dart';
 import 'package:estimation_list_generator/widgets/dialogs/delete_lottery_prize.dart';
 import 'package:estimation_list_generator/widgets/scale_button.dart';
@@ -10,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 
-class LotteryPrizeItemCard extends StatelessWidget {
+class LotteryPrizeItemCard extends StatefulWidget {
   final String index;
   final EventPrize prize;
   const LotteryPrizeItemCard({
@@ -20,9 +18,16 @@ class LotteryPrizeItemCard extends StatelessWidget {
   });
 
   @override
+  State<LotteryPrizeItemCard> createState() => _LotteryPrizeItemCardState();
+}
+
+class _LotteryPrizeItemCardState extends State<LotteryPrizeItemCard> {
+  bool isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    final prizeName = prize.prizeTitle;
-    final quantity = prize.quantity.toString();
+    final prizeName = widget.prize.prizeTitle;
+    final quantity = widget.prize.quantity.toString();
     Widget buildQuantity() {
       return ScaleButton(
         tooltip: 'មានចំនួន $quantity រង្វាន់',
@@ -70,36 +75,51 @@ class LotteryPrizeItemCard extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              index,
+              widget.index,
               style: TextStyle(color: AppColors.white),
             ),
           ),
         ),
         const Gap(8),
         Expanded(
-          child: Card.outlined(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: MouseRegion(
+            onEnter: (_) => setState(() => isHovered = true),
+            onExit: (_) => setState(() => isHovered = false),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                color: isHovered
+                    ? const Color.fromARGB(255, 179, 203, 255)
+                    : Color(0xFFf5f5f5),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: AppColors.primaryLight,
+                  width: 2,
+                ),
+              ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CachedNetworkImage(
-                    height: 50,
-                    width: 50,
-                    imageUrl:
-                        'https://images.sigma.world/lottery-numbers-1336x751.jpg',
-                    imageBuilder: (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
-                        ),
-                        boxShadow: fadeShadow,
-                      ),
-                    ),
-                  ),
-                  const Gap(16),
+                  // CachedNetworkImage(
+                  //   height: 50,
+                  //   width: 50,
+                  //   imageUrl:
+                  //       'https://images.sigma.world/lottery-numbers-1336x751.jpg',
+                  //   imageBuilder: (context, imageProvider) => Container(
+                  //     decoration: BoxDecoration(
+                  //       borderRadius: BorderRadius.circular(12),
+                  //       image: DecorationImage(
+                  //         image: imageProvider,
+                  //         fit: BoxFit.cover,
+                  //       ),
+                  //       boxShadow: fadeShadow,
+                  //     ),
+                  //   ),
+                  // ),
+                  // const Gap(16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +140,7 @@ class LotteryPrizeItemCard extends StatelessWidget {
                                       ),
                                     ),
                                   ),
-                                  if (prize.isTopPrize) ...[
+                                  if (widget.prize.isTopPrize) ...[
                                     const Gap(8),
                                     ScaleButton(
                                       tooltip: 'ជារង្វាន់ធំ',
@@ -144,7 +164,7 @@ class LotteryPrizeItemCard extends StatelessWidget {
                             ScaleButton(
                               onTap: () => showAddLotteryPrizeItemDialog(
                                 isUpdating: true,
-                                selectedPrize: prize,
+                                selectedPrize: widget.prize,
                               ),
                               tooltip: 'ធ្វើកំណែ',
                               child: Icon(
@@ -155,7 +175,8 @@ class LotteryPrizeItemCard extends StatelessWidget {
                             ),
                             const Gap(8),
                             ScaleButton(
-                              onTap: () => showDeleteLotteryPrizeDialog(prize),
+                              onTap: () =>
+                                  showDeleteLotteryPrizeDialog(widget.prize),
                               tooltip: 'លុបចេញ',
                               child: Icon(
                                 FontAwesomeIcons.trash,

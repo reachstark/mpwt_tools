@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:easy_rich_text/easy_rich_text.dart';
 import 'package:estimation_list_generator/controllers/db_controller.dart';
+import 'package:estimation_list_generator/models/lottery_event.dart';
 import 'package:estimation_list_generator/screens/lottery/widgets/lottery_event_card.dart';
 import 'package:estimation_list_generator/screens/lottery/widgets/lottery_prize_item_card.dart';
 import 'package:estimation_list_generator/utils/app_colors.dart';
@@ -31,9 +32,33 @@ class LotteryList extends StatefulWidget {
 }
 
 class _LotteryListState extends State<LotteryList> {
+  final dbX = Get.find<DbController>();
+  List<LotteryEvent> filteredEvents = [];
+
+  @override
+  void initState() {
+    filteredEvents = dbX.lotteryEvents;
+    dbX.searchController.addListener(_filterPlans);
+    super.initState();
+  }
+
+  // Function to filter plans based on search query
+  void _filterPlans() {
+    String query = dbX.searchController.text.toLowerCase();
+
+    setState(() {
+      filteredEvents = dbX.lotteryEvents
+          .where((event) => filterCases(event, query))
+          .toList();
+    });
+  }
+
+  bool filterCases(LotteryEvent event, String query) {
+    return (event.eventTitle.toLowerCase().contains(query));
+  }
+
   @override
   Widget build(BuildContext context) {
-    final dbX = Get.find<DbController>();
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
@@ -112,6 +137,7 @@ class _LotteryListState extends State<LotteryList> {
             SizedBox(
               width: width * 0.35,
               child: TextFormField(
+                controller: dbX.searchController,
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 16,
@@ -375,63 +401,60 @@ class _LotteryListState extends State<LotteryList> {
                           ),
                         ),
                       ),
-                      child: Obx(
-                        () {
-                          if (dbX.lotteryEvents.isEmpty) {
-                            Widget buildNoData() {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    svgNoData,
-                                    height: height / 3,
-                                  ),
-                                  const Gap(16),
-                                  Text(
-                                    'មិនមានទិន្ន័យ',
-                                    style: TextStyle(
-                                      color: AppColors.primaryLight,
-                                      fontSize: clampDouble(
-                                        height * 0.04,
-                                        18,
-                                        22,
-                                      ),
-                                    ),
-                                  ),
-                                  const Gap(16),
-                                  Text(
-                                    'សូមបន្ថែមទិន្ន័យថ្មីដោយចុចប៊ូតុងបន្ថែមនៅខាងស្តាំ',
-                                  ),
-                                ],
-                              );
-                            }
+                      child: Obx(() {
+                        final events = filteredEvents.isEmpty &&
+                                dbX.searchController.text.isEmpty
+                            ? dbX.lotteryEvents
+                            : filteredEvents;
 
-                            return buildNoData();
-                          }
-
-                          return ListView.builder(
-                            itemCount: dbX.lotteryEvents.length,
-                            physics: const BouncingScrollPhysics(),
-                            itemBuilder: (_, index) {
-                              final idx = dbX.lotteryEvents[index];
-                              final selectedItem =
-                                  dbX.selectedLotteryEvent.value;
-
-                              return LotteryEventCard(
-                                onTap: () {
-                                  setState(() {
-                                    dbX.selectedLotteryEvent.value = idx;
-                                  });
-                                },
-                                isSelected: selectedItem.id == idx.id,
-                                event: idx,
-                                isLastItem:
-                                    index == dbX.lotteryEvents.length - 1,
-                              );
-                            },
+                        Widget buildNoData() {
+                          return Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                svgNoData,
+                                height: Get.height / 3,
+                              ),
+                              const Gap(16),
+                              Text(
+                                'មិនមានទិន្ន័យ',
+                                style: TextStyle(
+                                  color: AppColors.primaryLight,
+                                  fontSize:
+                                      clampDouble(Get.height * 0.04, 18, 22),
+                                ),
+                              ),
+                              const Gap(16),
+                              Text(
+                                  'សូមបន្ថែមទិន្ន័យថ្មីដោយចុចប៊ូតុងបន្ថែមនៅខាងស្តាំ'),
+                            ],
                           );
-                        },
-                      ),
+                        }
+
+                        if (events.isEmpty) {
+                          return buildNoData();
+                        }
+
+                        return ListView.builder(
+                          itemCount: events.length,
+                          physics: const BouncingScrollPhysics(),
+                          itemBuilder: (_, index) {
+                            final event = events[index];
+                            final selectedItem = dbX.selectedLotteryEvent.value;
+
+                            return LotteryEventCard(
+                              onTap: () {
+                                setState(() {
+                                  dbX.selectedLotteryEvent.value = event;
+                                });
+                              },
+                              isSelected: selectedItem.id == event.id,
+                              event: event,
+                              isLastItem: index == events.length - 1,
+                            );
+                          },
+                        );
+                      }),
                     ),
                   ),
                   Expanded(

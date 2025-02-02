@@ -2,10 +2,10 @@ import 'package:estimation_list_generator/controllers/app_controller.dart';
 import 'package:estimation_list_generator/controllers/db_controller.dart';
 import 'package:estimation_list_generator/screens/lottery/lottery_list.dart';
 import 'package:estimation_list_generator/utils/app_colors.dart';
+import 'package:estimation_list_generator/utils/custom_card.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
@@ -150,54 +150,29 @@ class VerifyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Gap(16),
-        SvgPicture.asset(
-          svgSpecialEvent,
-          height: height / 2,
-        ),
-        const Gap(16),
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.primaryLight),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                FontAwesomeIcons.circleInfo,
-                color: AppColors.primaryLight,
-              ),
-              const Gap(8),
-              Flexible(
-                child: Text(
+        Gap(height / 6),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SvgPicture.asset(
+              svgSpecialEvent,
+              height: width / 4,
+            ),
+            CustomCard(
+              heading: 'Verification',
+              description:
                   'មុខងារនេះមានទិន្នន័យសម្ងាត់ សូមផ្ទៀងផ្ទាត់មុនពេលប្រើប្រាស់។',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: AppColors.primaryLight,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        const Gap(16),
-        ElevatedButton(
-          onPressed: () => launchVerificationDialog(),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.lock_open_rounded, color: Colors.white),
-              const Gap(8),
-              Text('Verify'),
-            ],
-          ),
+              onTap: () => launchVerificationDialog(),
+            ),
+          ],
         ),
       ],
     );
