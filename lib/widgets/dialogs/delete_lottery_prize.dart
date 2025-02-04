@@ -1,5 +1,5 @@
 import 'package:estimation_list_generator/controllers/db_controller.dart';
-import 'package:estimation_list_generator/models/lottery_event.dart';
+import 'package:estimation_list_generator/models/event_prize.dart';
 import 'package:estimation_list_generator/widgets/scale_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

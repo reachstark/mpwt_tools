@@ -1,4 +1,4 @@
-import 'package:estimation_list_generator/models/lottery_event.dart';
+import 'package:estimation_list_generator/models/event_prize.dart';
 import 'package:estimation_list_generator/utils/app_colors.dart';
 import 'package:estimation_list_generator/utils/app_images.dart';
 import 'package:estimation_list_generator/widgets/dialogs/add_lottery_prize_item.dart';

@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:estimation_list_generator/models/event_prize.dart';
 import 'package:estimation_list_generator/models/lottery_event.dart';
+import 'package:estimation_list_generator/models/winning_ticket.dart';
 import 'package:estimation_list_generator/utils/show_loading.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ class DbController extends GetxController {
   final searchController = TextEditingController();
 
   RxList<LotteryEvent> lotteryEvents = <LotteryEvent>[].obs;
+  RxList<LotteryWinner> lotteryWinners = <LotteryWinner>[].obs;
   Rx<LotteryEvent> selectedLotteryEvent = LotteryEvent(
     id: 0,
     eventDate: DateTime.now(),
@@ -22,12 +25,18 @@ class DbController extends GetxController {
     eventPrizes: [],
   ).obs;
   RxString masterKey = ''.obs;
+  Rx<LotteryWinner> selectedWinner = LotteryWinner(
+    eventId: 0,
+    ticketNumber: '',
+    lotteryPrize: '',
+  ).obs;
 
   @override
   void onInit() {
     readMasterKey();
     listenToMasterKeyChanges();
     readLotteryEvents();
+    getAllLotteryWinners();
     super.onInit();
   }
 
@@ -252,6 +261,7 @@ class DbController extends GetxController {
       // handle deleting the event from the local list and UI
       readLotteryEvents();
       selectedLotteryEvent.value = lotteryEvents.first;
+      selectedLotteryEvent.refresh();
 
       stopLoading();
     } catch (e) {
@@ -260,27 +270,42 @@ class DbController extends GetxController {
   }
 
   // CRUD for LotteryWinner
-  Future<void> createLotteryWinner(Map<String, dynamic> winnerData) async {
+  Future<void> createLotteryWinner(LotteryWinner winnerData) async {
     try {
-      final response =
-          await supabase.from(lotteryWinnersTable).insert(winnerData);
-      if (response.error != null) {
-        throw Exception(
-            'Error creating lottery winner: ${response.error!.message}');
-      }
+      await supabase.from(lotteryWinnersTable).insert(winnerData.toMap());
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<List<Map<String, dynamic>>> readLotteryWinners(String eventId) async {
+  void getAllLotteryWinners({
+    bool loading = false,
+  }) async {
+    try {
+      if (loading) showLoading();
+      final response = await supabase.from(lotteryWinnersTable).select();
+
+      lotteryWinners.assignAll((response as List<dynamic>)
+          .map((e) => LotteryWinner.fromMap(e))
+          .toList());
+
+      if (loading) stopLoading();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<LotteryWinner>> getLotteryPrizeWinners({
+    required int eventId,
+    required String prizeName,
+  }) async {
     try {
       final response = await supabase
           .from(lotteryWinnersTable)
           .select()
-          .eq('event_id', eventId);
-
-      return response;
+          .eq('event_id', eventId)
+          .eq('lottery_prize', prizeName);
+      return response.map((e) => LotteryWinner.fromMap(e)).toList();
     } catch (e) {
       rethrow;
     }
@@ -312,6 +337,41 @@ class DbController extends GetxController {
       }
     } catch (e) {
       rethrow;
+    }
+  }
+
+  Future<void> switchTicketClaimStatus(int ticketId, bool isClaimed) async {
+    try {
+      await supabase
+          .from(lotteryWinnersTable)
+          .update({'is_claimed': isClaimed})
+          .eq('id', ticketId)
+          .eq('event_id', selectedWinner.value.eventId);
+
+      selectedWinner.value.isClaimed = isClaimed;
+      selectedWinner.refresh();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<LotteryWinner> findWinnerByTicketNumber(String ticketNumber) async {
+    try {
+      final response = await supabase
+          .from(lotteryWinnersTable)
+          .select()
+          .eq('ticket_number', ticketNumber)
+          .single();
+
+      return LotteryWinner.fromMap(response);
+    } catch (e) {
+      return LotteryWinner(
+        id: -1,
+        eventId: -1,
+        lotteryPrize: 'NOT FOUND',
+        ticketNumber: 'NOT FOUND',
+        isClaimed: false,
+      );
     }
   }
 }

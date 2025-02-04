@@ -1,6 +1,7 @@
 import 'package:estimation_list_generator/controllers/app_controller.dart';
 import 'package:estimation_list_generator/controllers/db_controller.dart';
 import 'package:estimation_list_generator/screens/lottery/lottery_list.dart';
+import 'package:estimation_list_generator/screens/winner/winner_list_admin.dart';
 import 'package:estimation_list_generator/utils/app_colors.dart';
 import 'package:estimation_list_generator/utils/custom_card.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
@@ -10,15 +11,20 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
 
-void launchVerificationDialog() {
-  Get.dialog(
-    Verification(),
-  );
+enum VerificationType {
+  lotteryEvent,
+  winnerAdmin,
+}
+
+void launchVerificationDialog(VerificationType type) {
+  Get.dialog(Verification(type: type));
 }
 
 class Verification extends StatefulWidget {
+  final VerificationType type;
   const Verification({
     super.key,
+    required this.type,
   });
 
   @override
@@ -121,7 +127,9 @@ class _VerificationState extends State<Verification> {
                     () => Get.back(),
                   ).whenComplete(
                     () => Get.to(
-                      () => const LotteryList(),
+                      () => widget.type == VerificationType.lotteryEvent
+                          ? const LotteryList()
+                          : const WinnerListAdmin(),
                       transition: Transition.cupertino,
                       duration: const Duration(milliseconds: 300),
                     ),
@@ -170,7 +178,8 @@ class VerifyPage extends StatelessWidget {
               heading: 'Verification',
               description:
                   'មុខងារនេះមានទិន្នន័យសម្ងាត់ សូមផ្ទៀងផ្ទាត់មុនពេលប្រើប្រាស់។',
-              onTap: () => launchVerificationDialog(),
+              onTap: () =>
+                  launchVerificationDialog(VerificationType.lotteryEvent),
             ),
           ],
         ),

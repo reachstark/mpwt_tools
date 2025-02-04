@@ -1,4 +1,5 @@
 import 'package:estimation_list_generator/utils/custom_card.dart';
+import 'package:estimation_list_generator/widgets/verification.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
@@ -22,7 +23,8 @@ class IndexWinnerView extends StatelessWidget {
                 heading: 'Admin mode',
                 description:
                     'មុខងារនេះត្រូវបានរចនាឡើងដើម្បីអនុញ្ញាតឱ្យអ្នកប្រើប្រាស់ធ្វើបច្ចុប្បន្នភាពទិន្នន័យសម្រាប់ព្រឹត្តិការណ៍រង្វាន់។',
-                onTap: () {},
+                onTap: () =>
+                    launchVerificationDialog(VerificationType.winnerAdmin),
               ),
               const Gap(16),
               CustomCard(

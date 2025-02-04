@@ -1,14 +1,16 @@
 class LotteryWinner {
   final int id; // This is the primary key (auto-incremented) in the table.
-  final String eventId; // Foreign key referencing `lottery_events.event_id`.
+  final int eventId; // Foreign key referencing `lottery_events.event_id`.
   final String ticketNumber; // The winning ticket number.
   final String lotteryPrize; // The prize won by this ticket.
+  bool isClaimed; // Whether the prize has been claimed.
 
   LotteryWinner({
-    required this.id,
+    this.id = 0,
     required this.eventId,
     required this.ticketNumber,
     required this.lotteryPrize,
+    this.isClaimed = false,
   });
 
   // Factory constructor for creating a LotteryWinner object from Supabase data
@@ -18,6 +20,7 @@ class LotteryWinner {
       eventId: map['event_id'],
       ticketNumber: map['ticket_number'],
       lotteryPrize: map['lottery_prize'],
+      isClaimed: map['is_claimed'],
     );
   }
 
@@ -27,6 +30,7 @@ class LotteryWinner {
       'event_id': eventId,
       'ticket_number': ticketNumber,
       'lottery_prize': lotteryPrize,
+      'is_claimed': isClaimed,
     };
   }
 }

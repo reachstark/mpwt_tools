@@ -1,4 +1,4 @@
-import 'package:estimation_list_generator/models/lottery_event.dart';
+import 'package:estimation_list_generator/models/event_prize.dart';
 
 String getPrizesCount(List<EventPrize> prizes) {
   var count = 0;

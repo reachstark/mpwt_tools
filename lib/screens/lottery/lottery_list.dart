@@ -5,8 +5,10 @@ import 'package:estimation_list_generator/controllers/db_controller.dart';
 import 'package:estimation_list_generator/models/lottery_event.dart';
 import 'package:estimation_list_generator/screens/lottery/widgets/lottery_event_card.dart';
 import 'package:estimation_list_generator/screens/lottery/widgets/lottery_prize_item_card.dart';
+import 'package:estimation_list_generator/screens/winner/winner_list_admin.dart';
 import 'package:estimation_list_generator/utils/app_colors.dart';
 import 'package:estimation_list_generator/utils/app_lottie.dart';
+import 'package:estimation_list_generator/utils/custom_card.dart';
 import 'package:estimation_list_generator/utils/format_date.dart';
 import 'package:estimation_list_generator/utils/get_prizes_count.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
@@ -196,7 +198,7 @@ class _LotteryListState extends State<LotteryList> {
                     ),
                     const Gap(8),
                     Text(
-                      'បន្ថែម',
+                      'បន្ថែមព្រឹត្តការណ៍',
                       style: TextStyle(
                         color: AppColors.white,
                       ),
@@ -375,6 +377,18 @@ class _LotteryListState extends State<LotteryList> {
               ),
             ],
           ),
+          const Gap(16),
+          SizedBox(
+            width: max(width * 0.25, 300),
+            child: CustomCard(
+              heading: 'បញ្ជីអ្នកទទួលរង្វាន់',
+              description:
+                  'បញ្ចូលទិន្នន័យអ្នកឈ្នះរង្វាន់ទៅក្នុងព្រឹត្តិការណ៍នេះ។',
+              onTap: () => navigateToWinnerListAdmin(
+                setEvent: dbX.selectedLotteryEvent.value,
+              ),
+            ),
+          ),
         ],
       );
     }
@@ -406,6 +420,8 @@ class _LotteryListState extends State<LotteryList> {
                                 dbX.searchController.text.isEmpty
                             ? dbX.lotteryEvents
                             : filteredEvents;
+
+                        final selectedItem = dbX.selectedLotteryEvent.value;
 
                         Widget buildNoData() {
                           return Column(
@@ -440,7 +456,6 @@ class _LotteryListState extends State<LotteryList> {
                           physics: const BouncingScrollPhysics(),
                           itemBuilder: (_, index) {
                             final event = events[index];
-                            final selectedItem = dbX.selectedLotteryEvent.value;
 
                             return LotteryEventCard(
                               onTap: () {
@@ -494,15 +509,41 @@ class _LotteryListState extends State<LotteryList> {
                                     child: Row(
                                       children: [
                                         totalCount(),
-                                        const Gap(8),
+                                        const Gap(36),
                                         ScaleButton(
                                           onTap: () =>
                                               showAddLotteryPrizeItemDialog(
-                                                  isUpdating: false),
+                                            isUpdating: false,
+                                          ),
                                           tooltip: 'បន្ថែមរង្វាន់',
-                                          child: Icon(
-                                            FontAwesomeIcons.circlePlus,
-                                            color: AppColors.primaryLight,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                              vertical: 4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                color: AppColors.primaryLight,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(100),
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Icon(
+                                                  FontAwesomeIcons.circlePlus,
+                                                  color: AppColors.primaryLight,
+                                                ),
+                                                const Gap(8),
+                                                Text(
+                                                  'បន្ថែមរង្វាន់',
+                                                  style: TextStyle(
+                                                    color:
+                                                        AppColors.primaryLight,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ],
