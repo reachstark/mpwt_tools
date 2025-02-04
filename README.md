@@ -1,6 +1,6 @@
-# estimation_list_generator
+# mpwt_tools
 
-A new Flutter project that lets user to generate a document with a letter head format and aims to reduce khmer input time consumption.
+A new Flutter project that lets user to generate and export data, manage lottery event, and many more.
 
 ## Getting Started
 
