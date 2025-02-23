@@ -79,6 +79,7 @@ class AppTheme {
     /// PROGRESS INDICATOR
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       color: AppColors.primaryLight,
+      year2023: false,
     ),
 
     /// FLOATING ACTION BUTTON
@@ -355,6 +356,7 @@ class AppTheme {
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       color: AppColors.secondaryDark,
       linearTrackColor: AppColors.primaryDark,
+      year2023: false,
     ),
 
     /// CHECKBOX

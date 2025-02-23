@@ -30,6 +30,8 @@ dependencies:
   uuid: ^4.5.1
   flutter_confetti: ^0.3.4
   choice: ^2.3.2
+  path_provider: ^2.1.5
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:

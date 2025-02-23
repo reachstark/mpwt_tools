@@ -13,7 +13,7 @@ void launchConfetti(BuildContext context) {
     options: ConfettiOptions(
         angle: randomInRange(55, 125),
         spread: randomInRange(50, 70),
-        particleCount: randomInRange(200, 400).toInt(),
+        particleCount: randomInRange(200, 350).toInt(),
         y: 0.6),
   );
 }

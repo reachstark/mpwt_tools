@@ -15,6 +15,11 @@ class DbController extends GetxController {
   final SupabaseClient supabase = Supabase.instance.client;
   final searchController = TextEditingController();
 
+  StreamSubscription? _winnerSubscription;
+
+  RxString subscribeStatus = 'none'.obs;
+  RxBool isSubscribed = false.obs;
+  RxList<String> dbLogs = <String>[].obs;
   RxList<LotteryEvent> lotteryEvents = <LotteryEvent>[].obs;
   RxList<LotteryWinner> lotteryWinners = <LotteryWinner>[].obs;
   Rx<LotteryEvent> selectedLotteryEvent = LotteryEvent(
@@ -40,6 +45,10 @@ class DbController extends GetxController {
     super.onInit();
   }
 
+  void clearLogs() {
+    dbLogs.clear();
+  }
+
   // Read lottery_masterkey table and returns the field "access_code" type string
   Future<void> readMasterKey() async {
     try {
@@ -54,13 +63,82 @@ class DbController extends GetxController {
 
   // listen to masterkey changes
   void listenToMasterKeyChanges() {
-    supabase
-        .from(lotteryMasterkey)
-        .stream(primaryKey: ['id']).listen((response) {
-      if (response.isNotEmpty) {
-        masterKey.value = response.first['access_code'];
-      }
-    });
+    void startListening() {
+      supabase.from(lotteryMasterkey).stream(primaryKey: ['id']).listen(
+        (response) {
+          if (response.isNotEmpty) {
+            masterKey.value = response.first['access_code'];
+          }
+        },
+        onError: (error) {
+          dbLogs.add(error.toString());
+          Future.delayed(
+            Duration(seconds: 5),
+            startListening,
+          ); // Auto-reconnect after 5 seconds
+        },
+        onDone: () {
+          dbLogs.add('Realtime connection closed, restarting in 5 seconds...');
+          Future.delayed(
+            Duration(seconds: 5),
+            startListening,
+          ); // Auto-reconnect
+        },
+      );
+    }
+
+    startListening();
+  }
+
+  void listenToWinnerChanges({required int eventId}) {
+    _winnerSubscription?.cancel(); // Cancel any previous listener
+
+    void startListening() {
+      isSubscribed.value = true;
+      dbLogs.add('Subscribing to event_id: $eventId');
+      _winnerSubscription = supabase
+          .from(lotteryWinnersTable)
+          .stream(primaryKey: ['id'])
+          .eq('event_id', eventId)
+          .listen(
+            (response) {
+              dbLogs.add('Received new data for event_id: $eventId');
+              subscribeStatus.value = 'active';
+              // insert new lottery winner to local list when a new winner is added, without having to replace all data
+              for (var i = 0; i < response.length; i++) {
+                if (lotteryWinners
+                    .where((element) => element.id == response[i]['id'])
+                    .isEmpty) {
+                  lotteryWinners.add(LotteryWinner.fromMap(response[i]));
+                }
+              }
+            },
+            onError: (error) {
+              dbLogs.add(error.toString());
+              isSubscribed.value = false;
+              subscribeStatus.value = 'disconnected';
+              Future.delayed(const Duration(seconds: 5), startListening);
+            },
+            onDone: () {
+              dbLogs.add(
+                  'Realtime connection closed, restarting in 5 seconds...');
+              isSubscribed.value = false;
+              subscribeStatus.value = 'disconnected';
+              Future.delayed(const Duration(seconds: 5), startListening);
+            },
+          );
+    }
+
+    startListening();
+  }
+
+  void stopListeningToWinnerChanges() {
+    if (_winnerSubscription == null) return;
+    _winnerSubscription?.cancel();
+    _winnerSubscription = null;
+    isSubscribed.value = false;
+    subscribeStatus.value = 'none';
+    dbLogs.add('Realtime connection closed.');
   }
 
   // CRUD for LotteryEvent
@@ -119,6 +197,7 @@ class DbController extends GetxController {
 
       // Update the local list and refresh UI
       selectedLotteryEvent.value = updatedEvent;
+      lotteryEvents.refresh();
 
       stopLoading();
     } catch (e) {
@@ -260,8 +339,13 @@ class DbController extends GetxController {
 
       // handle deleting the event from the local list and UI
       readLotteryEvents();
-      selectedLotteryEvent.value = lotteryEvents.first;
-      selectedLotteryEvent.refresh();
+      selectedLotteryEvent.value = LotteryEvent(
+        id: 0,
+        eventTitle: 'No event selected',
+        eventDate: DateTime(2000),
+        createdAt: DateTime(2000),
+        eventPrizes: [],
+      );
 
       stopLoading();
     } catch (e) {
