@@ -170,6 +170,10 @@ class _WinnerListState extends State<WinnerList> {
     Widget rightPane() {
       return Obx(
         () {
+          if (dbX.lotteryWinners.isEmpty) {
+            return SizedBox();
+          }
+
           String lastTicketNumber = dbX.lotteryWinners.last.ticketNumber;
 
           return Expanded(
@@ -194,7 +198,7 @@ class _WinnerListState extends State<WinnerList> {
                     borderRadius: BorderRadius.circular(100),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
+                        color: Colors.black.withAlpha(25),
                         spreadRadius: 5,
                         blurRadius: 7,
                         offset: const Offset(0, 3),
@@ -209,6 +213,8 @@ class _WinnerListState extends State<WinnerList> {
                         width: width,
                       ),
                       Animate(
+                        key: ValueKey(
+                            lastTicketNumber), // Forces animation replay
                         effects: [
                           FadeEffect(
                             delay: Duration(milliseconds: 1200),

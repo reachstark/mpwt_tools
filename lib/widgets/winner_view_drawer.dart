@@ -78,7 +78,7 @@ class _WinnerListViewDrawerState extends State<WinnerListViewDrawer> {
                 children: [
                   Gap(height * 0.1),
                   SvgPicture.asset(
-                    mpwtLogo,
+                    mpwtLogoSVG,
                     width: 100,
                   ),
                   const Gap(16),

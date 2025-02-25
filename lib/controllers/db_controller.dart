@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:estimation_list_generator/models/event_prize.dart';
 import 'package:estimation_list_generator/models/lottery_event.dart';
 import 'package:estimation_list_generator/models/winning_ticket.dart';
+import 'package:estimation_list_generator/utils/show_error.dart';
 import 'package:estimation_list_generator/utils/show_loading.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
 import 'package:flutter/material.dart';
@@ -138,6 +139,7 @@ class DbController extends GetxController {
     _winnerSubscription = null;
     isSubscribed.value = false;
     subscribeStatus.value = 'none';
+
     dbLogs.add('Realtime connection closed.');
   }
 
@@ -354,11 +356,25 @@ class DbController extends GetxController {
   }
 
   // CRUD for LotteryWinner
-  Future<void> createLotteryWinner(LotteryWinner winnerData) async {
+  Future<bool> createLotteryWinner(LotteryWinner winnerData) async {
     try {
-      await supabase.from(lotteryWinnersTable).insert(winnerData.toMap());
+      // Step 1: Check if a winner with the same ticket number already exists in supabase
+      final existingWinner =
+          await findWinnerByTicketNumber(winnerData.ticketNumber);
+
+      if (existingWinner.ticketNumber == winnerData.ticketNumber) {
+        Future.delayed(const Duration(milliseconds: 300), () {
+          showErrorMessage(
+            'អ្នកឈ្នះដែលមានលេខសំបុត្រ ${winnerData.ticketNumber} មានទិន្នន័យរួចហើយ',
+          );
+        });
+        return false;
+      } else {
+        await supabase.from(lotteryWinnersTable).insert(winnerData.toMap());
+        return true;
+      }
     } catch (e) {
-      rethrow;
+      return false;
     }
   }
 

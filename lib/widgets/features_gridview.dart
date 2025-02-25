@@ -50,6 +50,12 @@ class FeaturesGridView extends StatelessWidget {
             selected: appX.featureIndex.value == 4,
             onTap: () => appX.setFeatureIndex(4),
           ),
+          FeatureItem(
+            icon: FontAwesomeIcons.circleDollarToSlot,
+            title: donateDeveloper,
+            selected: appX.featureIndex.value == 5,
+            onTap: () => appX.setFeatureIndex(5),
+          ),
         ];
 
         return Column(

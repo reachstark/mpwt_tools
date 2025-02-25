@@ -34,4 +34,10 @@ class AppController extends GetxController {
       Uri.parse(followEstimationListUrl),
     );
   }
+
+  Future<void> launchUpdates() async {
+    await launchUrl(
+      Uri.parse(updatesUrl),
+    );
+  }
 }
