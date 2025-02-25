@@ -1,3 +1,4 @@
+import 'package:estimation_list_generator/screens/winner/winner_list_view.dart';
 import 'package:estimation_list_generator/utils/custom_card.dart';
 import 'package:estimation_list_generator/widgets/verification.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class IndexWinnerView extends StatelessWidget {
                 heading: 'View mode',
                 description:
                     'ត្រូវបានរចនាឡើងដើម្បីអនុញ្ញាតឱ្យអ្នកប្រើប្រាស់បង្ហាញទិន្នន័យព្រឹត្តិការណ៍រង្វាន់ដែលបានធ្វើបច្ចុប្បន្នភាពដោយអ្នកប្រើប្រាស់ផ្សេងទៀត។',
-                onTap: () {},
+                onTap: () => launchWinnerListView(),
               ),
             ],
           ),

@@ -10,6 +10,7 @@ import 'package:estimation_list_generator/screens/winner/winner_ticket_detail.da
 import 'package:estimation_list_generator/utils/app_colors.dart';
 import 'package:estimation_list_generator/utils/app_images.dart';
 import 'package:estimation_list_generator/utils/app_lottie.dart';
+import 'package:estimation_list_generator/utils/show_loading.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
 import 'package:estimation_list_generator/widgets/dotted_line.dart';
 import 'package:estimation_list_generator/widgets/scale_button.dart';
@@ -105,7 +106,9 @@ class _WinnerListAdminState extends State<WinnerListAdmin> {
         return;
       }
 
-      await dbX.createLotteryWinner(
+      showLoading();
+
+      final isCreated = await dbX.createLotteryWinner(
         LotteryWinner(
           eventId: selectedEvent!.id,
           ticketNumber: lotteryNumberController.text.trim(),
@@ -113,16 +116,20 @@ class _WinnerListAdminState extends State<WinnerListAdmin> {
         ),
       );
 
-      setState(() {
-        winners.add(
-          LotteryWinner(
-            eventId: selectedEvent!.id,
-            ticketNumber: lotteryNumberController.text.trim(),
-            lotteryPrize: selectedPrize!.prizeTitle,
-          ),
-        );
-      });
-
+      if (isCreated) {
+        Get.back();
+        setState(() {
+          winners.add(
+            LotteryWinner(
+              eventId: selectedEvent!.id,
+              ticketNumber: lotteryNumberController.text.trim(),
+              lotteryPrize: selectedPrize!.prizeTitle,
+            ),
+          );
+        });
+      } else {
+        stopLoading();
+      }
       lotteryNumberController.clear();
     }
   }
