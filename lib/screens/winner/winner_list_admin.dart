@@ -68,8 +68,6 @@ class _WinnerListAdminState extends State<WinnerListAdmin> {
         .toList();
     if (widget.setEvent != null) {
       selectedEvent = widget.setEvent;
-    } else {
-      selectedEvent = dbX.lotteryEvents.first;
     }
     getLotteryPrizesList();
     super.initState();
@@ -217,7 +215,7 @@ class _WinnerListAdminState extends State<WinnerListAdmin> {
 
       return AnimatedPositioned(
         duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+        curve: Curves.fastEaseInToSlowEaseOut,
         bottom: showFilterMenu ? 0 : -240,
         right: 32,
         child: AnimatedContainer(
@@ -333,7 +331,9 @@ class _WinnerListAdminState extends State<WinnerListAdmin> {
 
     Widget buildWinnerChips() {
       if (isLoadingWinners) {
-        return CircularProgressIndicator();
+        return CircularProgressIndicator(
+          year2023: false,
+        );
       }
 
       return Row(

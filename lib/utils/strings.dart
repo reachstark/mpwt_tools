@@ -24,7 +24,8 @@ const String donateDeveloper = 'បរិច្ចាគអ្នកអភិវ
 
 const String followEstimationListUrl =
     'https://docs.google.com/spreadsheets/d/1aTrlV0rCScPkgR-atlt3UbIu263oGXiVwo6I6MTc14w/edit?usp=sharing';
-const String updatesUrl = '';
+const String updatesUrl =
+    'https://mega.nz/folder/xgEQzA5S#JSqlSCTwfRkRl1HdekQOqQ';
 
 const reviewSample =
     'សំណើសុំគោលការណ៍ធានាចំណាយថវិកាជំពូក ៦១ ក្នុងកម្មវិធីទី១ ចំនួន ២.០៧៥.៧៣៤.០០០៛០០ និងផ្តល់បុរេប្រទានថវិកា ចំនួន ៤០% សម្រាប់ការងារជួសជុលផ្លូវខេត្តលេខ១តេកា១ (ចំណាត់ថ្នាក់ R4/U4) ដោយចាក់ក្រាលកៅស៊ូ DBST ប្រវែងសរុប ១.៦០០ម ទទឹង ៨ម និងសំណង់សិល្បការ ចាប់ពីគ.ម ១៣+២៦០ ដល់គ.ម ១៤+៩០០ ដាក់លូបណ្តោយផ្លូវមុខកាត់ ០,៨ម ប្រវែងសរុប ១.៤៧២ម (៧៣៦ម×២ខាង) និងអណ្តូងលូទំហំ ១,៣៤ម×១,៣៤ម ចំនួន ៥៤កន្លែង ចាប់ពីគ.ម ១៤+១៦៤ ដល់គ.ម ១៤+៩០០ ស្ថិតក្នុងស្រុកអង្គរបូរី ខេត្តតាកែវ។';

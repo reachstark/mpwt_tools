@@ -295,8 +295,9 @@ class _LotteryListState extends State<LotteryList> {
                         HorizontalData(
                           icon: FontAwesomeIcons.hands,
                           title: 'បានបើកជូន',
-                          data:
-                              '0 /${getPrizesCount(selectedEvent.eventPrizes)}',
+                          data: getPrizesCount(selectedEvent.eventPrizes),
+                          futureData:
+                              dbX.getClaimedPrizesCount(selectedEvent.id),
                         ),
                         const Gap(8),
                         HorizontalData(

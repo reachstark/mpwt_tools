@@ -3,6 +3,7 @@ import 'package:estimation_list_generator/utils/app_colors.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
 import 'package:estimation_list_generator/widgets/feature_views/estimation_generator/paper_layout.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
@@ -136,13 +137,27 @@ class _PreviewLayoutState extends State<PreviewLayout> {
         Container(
           margin: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white24,
+            color: Colors.yellow.shade100,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text(
-              'This feature is currently under development.',
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  FontAwesomeIcons.circleInfo,
+                  color: AppColors.vibrantOrange,
+                ),
+                const Gap(8),
+                Text(
+                  'មុខងារនេះស្ថិតក្នុងការសិក្សាស្រាវជ្រាវនៅឡើយ',
+                  style: TextStyle(
+                    color: AppColors.vibrantOrange,
+                    fontFamily: siemreap,
+                  ),
+                ),
+              ],
             ),
           ),
         ),

@@ -383,7 +383,10 @@ class DbController extends GetxController {
   }) async {
     try {
       if (loading) showLoading();
-      final response = await supabase.from(lotteryWinnersTable).select();
+      final response = await supabase.from(lotteryWinnersTable).select().order(
+            'id',
+            ascending: true,
+          );
 
       lotteryWinners.assignAll((response as List<dynamic>)
           .map((e) => LotteryWinner.fromMap(e))
@@ -404,7 +407,8 @@ class DbController extends GetxController {
           .from(lotteryWinnersTable)
           .select()
           .eq('event_id', eventId)
-          .eq('lottery_prize', prizeName);
+          .eq('lottery_prize', prizeName)
+          .order('id', ascending: true);
       return response.map((e) => LotteryWinner.fromMap(e)).toList();
     } catch (e) {
       rethrow;
@@ -472,6 +476,20 @@ class DbController extends GetxController {
         ticketNumber: 'NOT FOUND',
         isClaimed: false,
       );
+    }
+  }
+
+  Future<String> getClaimedPrizesCount(int eventId) async {
+    try {
+      final response = await supabase
+          .from(lotteryWinnersTable)
+          .select('id')
+          .eq('event_id', eventId)
+          .eq('is_claimed', true);
+
+      return response.length.toString();
+    } catch (e) {
+      return '0'; // In case of error, return 0
     }
   }
 }

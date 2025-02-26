@@ -93,7 +93,9 @@ class _DonatePageState extends State<DonatePage> {
                         child: Text(
                           donateInfo,
                           style: TextStyle(
-                            fontFamily: siemreap,
+                            height: 1.5,
+                            fontSize: 13,
+                            fontFamily: kantumruy,
                           ),
                         ),
                       ),
