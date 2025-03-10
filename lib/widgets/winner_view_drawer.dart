@@ -129,6 +129,7 @@ class _WinnerListViewDrawerState extends State<WinnerListViewDrawer> {
                       if (value != null) {
                         selectedEvent = value;
                         dbX.selectedLotteryEvent.value = value;
+                        dbX.getAllLotteryPrizeWinners(eventId: value.id);
                         unfocus();
                       }
                     },
@@ -179,6 +180,7 @@ class _WinnerListViewDrawerState extends State<WinnerListViewDrawer> {
                               itemBuilder: (context, index) {
                                 return Row(
                                   mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       '${index + 1}. ',

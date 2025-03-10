@@ -91,60 +91,63 @@ class _VerificationState extends State<Verification> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(
-              pinController.text == dbX.masterKey.value
-                  ? Icons.check_circle_rounded
-                  : Icons.lock_rounded,
-              color: AppColors.primaryLight,
-              size: height / 6,
-            ),
-            const Gap(16),
-            Text(
-              'បញ្ចូលលេខកូដដើម្បីបន្ត',
-              style: TextStyle(
-                fontSize: 18,
+            if (dbX.masterKey.value.isEmpty) ...[],
+            if (dbX.masterKey.value.isNotEmpty) ...[
+              Icon(
+                pinController.text == dbX.masterKey.value
+                    ? Icons.check_circle_rounded
+                    : Icons.lock_rounded,
                 color: AppColors.primaryLight,
+                size: height / 6,
               ),
-            ),
-            const Gap(16),
-            Pinput(
-              controller: pinController,
-              focusNode: focusNode,
-              length: int.parse(dbX.masterKey.value).toString().length,
-              autofocus: true,
-              obscureText: true,
-              obscuringCharacter: '*',
-              defaultPinTheme: defaultPinTheme,
-              errorPinTheme: errorPinTheme,
-              errorTextStyle: const TextStyle(
-                color: AppColors.darkerRed,
+              const Gap(16),
+              Text(
+                'បញ្ចូលលេខកូដដើម្បីបន្ត',
+                style: TextStyle(
+                  fontSize: 18,
+                  color: AppColors.primaryLight,
+                ),
               ),
-              onCompleted: (value) => setState(() {}),
-              onChanged: (value) async {
-                if (value == dbX.masterKey.value) {
-                  Future.delayed(
-                    const Duration(milliseconds: 300),
-                    () => Get.back(),
-                  ).whenComplete(
-                    () => Get.to(
-                      () => widget.type == VerificationType.lotteryEvent
-                          ? const LotteryList()
-                          : const WinnerListAdmin(),
-                      transition: Transition.cupertino,
-                      duration: const Duration(milliseconds: 300),
-                    ),
-                  );
-                }
-              },
-              validator: (value) {
-                if (value != dbX.masterKey.value) {
-                  return 'លេខកូដមិនត្រឹមត្រូវ';
-                }
-                return null;
-              },
-            ),
-            const Gap(16),
-            switchButton(),
+              const Gap(16),
+              Pinput(
+                controller: pinController,
+                focusNode: focusNode,
+                length: int.parse(dbX.masterKey.value).toString().length,
+                autofocus: true,
+                obscureText: true,
+                obscuringCharacter: '*',
+                defaultPinTheme: defaultPinTheme,
+                errorPinTheme: errorPinTheme,
+                errorTextStyle: const TextStyle(
+                  color: AppColors.darkerRed,
+                ),
+                onCompleted: (value) => setState(() {}),
+                onChanged: (value) async {
+                  if (value == dbX.masterKey.value) {
+                    Future.delayed(
+                      const Duration(milliseconds: 300),
+                      () => Get.back(),
+                    ).whenComplete(
+                      () => Get.to(
+                        () => widget.type == VerificationType.lotteryEvent
+                            ? const LotteryList()
+                            : const WinnerListAdmin(),
+                        transition: Transition.cupertino,
+                        duration: const Duration(milliseconds: 300),
+                      ),
+                    );
+                  }
+                },
+                validator: (value) {
+                  if (value != dbX.masterKey.value) {
+                    return 'លេខកូដមិនត្រឹមត្រូវ';
+                  }
+                  return null;
+                },
+              ),
+              const Gap(16),
+              switchButton(),
+            ],
             const Gap(16),
           ],
         ),

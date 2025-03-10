@@ -340,9 +340,9 @@ class _LotteryListState extends State<LotteryList> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ScaleButton(
-                tooltip: 'Export to .csv file type',
+                tooltip: 'Export to .xls file type',
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () => dbX.exportLotteryData(),
                   child: Row(
                     children: [
                       Icon(

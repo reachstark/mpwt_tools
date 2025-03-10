@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:estimation_list_generator/models/event_prize.dart';
 import 'package:estimation_list_generator/models/lottery_event.dart';
@@ -6,8 +7,10 @@ import 'package:estimation_list_generator/models/winning_ticket.dart';
 import 'package:estimation_list_generator/utils/show_error.dart';
 import 'package:estimation_list_generator/utils/show_loading.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DbController extends GetxController {
@@ -184,6 +187,60 @@ class DbController extends GetxController {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<void> exportLotteryData() async {
+    showLoading();
+    List<Map<String, dynamic>> data = await supabase
+        .from(lotteryEventsTable)
+        .select()
+        .eq('id', selectedLotteryEvent.value.id);
+
+    if (data.isEmpty) {
+      stopLoading();
+      return;
+    }
+
+    // Create a new Excel file
+    var excel = Excel.createExcel();
+
+    // Get and rename the default sheet instead of creating a new one
+    String defaultSheetName = excel.getDefaultSheet() ?? 'Sheet1';
+    excel.rename(defaultSheetName, 'Lottery Data');
+
+    // Access the renamed sheet
+    var sheet = excel['Lottery Data'];
+
+    // Define Headers
+    sheet.appendRow([
+      TextCellValue('Prize Title'),
+      TextCellValue('Quantity'),
+      TextCellValue('Is Top Prize'),
+      TextCellValue('Prize ID'),
+    ]);
+
+    sheet.setColumnWidth(0, 30);
+    sheet.setColumnWidth(2, 10);
+    sheet.setColumnWidth(3, 10);
+
+    for (var row in data) {
+      List<dynamic> eventPrizes = row['event_prizes'];
+
+      for (var prize in eventPrizes) {
+        sheet.appendRow([
+          TextCellValue(prize['prizeTitle']),
+          IntCellValue(prize['quantity']),
+          BoolCellValue(prize['isTopPrize']),
+          IntCellValue(prize['id']),
+        ]);
+      }
+    }
+
+    final directory = await getApplicationDocumentsDirectory();
+    final filePath = '${directory.path}/${data.first['event_title']}.xlsx';
+    final file = File(filePath);
+    await file.writeAsBytes(excel.encode()!);
+    stopLoading();
   }
 
   Future<void> updateLotteryEvent(
@@ -393,6 +450,23 @@ class DbController extends GetxController {
           .toList());
 
       if (loading) stopLoading();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> getAllLotteryPrizeWinners({
+    required int eventId,
+  }) async {
+    try {
+      final response = await supabase
+          .from(lotteryWinnersTable)
+          .select()
+          .eq('event_id', eventId)
+          .order('id', ascending: true);
+      lotteryWinners.assignAll((response as List<dynamic>)
+          .map((e) => LotteryWinner.fromMap(e))
+          .toList());
     } catch (e) {
       rethrow;
     }
