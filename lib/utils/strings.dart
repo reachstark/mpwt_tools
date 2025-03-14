@@ -21,6 +21,7 @@ const String mpwtLotteryWinnerList = 'បញ្ជីអ្នកទទួលរ
 const String followEstimationList = 'តាមដានការងារបញ្ជីប៉ាន់តម្លៃ';
 const String qrCodeGenerator = 'QR Code Generator';
 const String donateDeveloper = 'បរិច្ចាគអ្នកអភិវឌ្ឍន៍';
+const String followFMIS = 'គម្រោងលេខកូដ FMIS';
 
 const String followEstimationListUrl =
     'https://docs.google.com/spreadsheets/d/1aTrlV0rCScPkgR-atlt3UbIu263oGXiVwo6I6MTc14w/edit?usp=sharing';
@@ -36,3 +37,4 @@ const projectIdSample = 'MPWT325-1TK2-6103-392';
 final String lotteryMasterkey = 'lottery_masterkey';
 final String lotteryEventsTable = 'lottery_events';
 final String lotteryWinnersTable = 'lottery_winners';
+final String fmisCodesTable = 'fmis_codes';

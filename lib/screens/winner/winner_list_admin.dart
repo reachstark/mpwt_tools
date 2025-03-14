@@ -66,6 +66,9 @@ class _WinnerListAdminState extends State<WinnerListAdmin> {
     eventLists = dbX.lotteryEvents
         .map((e) => DropdownMenuItem(value: e, child: Text(e.eventTitle)))
         .toList();
+    if (dbX.selectedLotteryEvent.value == widget.setEvent) {
+      selectedEvent = dbX.selectedLotteryEvent.value;
+    }
     if (widget.setEvent != null) {
       selectedEvent = widget.setEvent;
     }

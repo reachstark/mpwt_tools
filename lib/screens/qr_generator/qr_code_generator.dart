@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:estimation_list_generator/utils/app_colors.dart';
 import 'package:estimation_list_generator/utils/show_error.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
+import 'package:estimation_list_generator/widgets/snackbar/snackbars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -61,13 +62,7 @@ class _QrCodeGeneratorState extends State<QrCodeGenerator> {
         File file = File(filePath);
         await file.writeAsBytes(pngBytes);
 
-        Get.snackbar(
-          'Success',
-          'QR code saved to $filePath',
-          backgroundColor: AppColors.primaryLight,
-          colorText: Colors.white,
-          margin: const EdgeInsets.all(20),
-        );
+        showSuccessSnackbar(message: 'QR code saved to $filePath');
       }
     } catch (e) {
       showErrorMessage(e.toString());

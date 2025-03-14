@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:estimation_list_generator/models/event_prize.dart';
+import 'package:estimation_list_generator/models/fmis_code.dart';
 import 'package:estimation_list_generator/models/lottery_event.dart';
 import 'package:estimation_list_generator/models/winning_ticket.dart';
 import 'package:estimation_list_generator/utils/show_error.dart';
 import 'package:estimation_list_generator/utils/show_loading.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
+import 'package:estimation_list_generator/widgets/snackbar/snackbars.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -24,6 +26,7 @@ class DbController extends GetxController {
   RxString subscribeStatus = 'none'.obs;
   RxBool isSubscribed = false.obs;
   RxList<String> dbLogs = <String>[].obs;
+  RxList<FmisCode> fmisCodes = <FmisCode>[].obs;
   RxList<LotteryEvent> lotteryEvents = <LotteryEvent>[].obs;
   RxList<LotteryWinner> lotteryWinners = <LotteryWinner>[].obs;
   Rx<LotteryEvent> selectedLotteryEvent = LotteryEvent(
@@ -46,6 +49,7 @@ class DbController extends GetxController {
     listenToMasterKeyChanges();
     readLotteryEvents();
     getAllLotteryWinners();
+    getFmisCodes();
     super.onInit();
   }
 
@@ -191,43 +195,68 @@ class DbController extends GetxController {
 
   Future<void> exportLotteryData() async {
     showLoading();
-    List<Map<String, dynamic>> data = await supabase
+    List<Map<String, dynamic>> eventDetail = await supabase
         .from(lotteryEventsTable)
         .select()
         .eq('id', selectedLotteryEvent.value.id);
 
-    if (data.isEmpty) {
+    List<Map<String, dynamic>> eventWinners = await supabase
+        .from(lotteryWinnersTable)
+        .select()
+        .eq('event_id', selectedLotteryEvent.value.id);
+
+    if (eventDetail.isEmpty) {
       stopLoading();
+      showWarningSnackbar(message: 'No data to export');
       return;
     }
 
     // Create a new Excel file
     var excel = Excel.createExcel();
 
+    // Header cell styles
+    CellStyle headerStyle = CellStyle(
+      backgroundColorHex: ExcelColor.fromHexString('#1E2A5E'),
+      fontColorHex: ExcelColor.fromHexString('#FFFFFF'),
+      horizontalAlign: HorizontalAlign.Center,
+      verticalAlign: VerticalAlign.Center,
+      bold: true,
+    );
+
     // Get and rename the default sheet instead of creating a new one
     String defaultSheetName = excel.getDefaultSheet() ?? 'Sheet1';
     excel.rename(defaultSheetName, 'Lottery Data');
 
     // Access the renamed sheet
-    var sheet = excel['Lottery Data'];
+    var eventSheet = excel['Lottery Data'];
 
-    // Define Headers
-    sheet.appendRow([
-      TextCellValue('Prize Title'),
-      TextCellValue('Quantity'),
-      TextCellValue('Is Top Prize'),
-      TextCellValue('Prize ID'),
-    ]);
+    // Define Headers for Lottery Data sheet
+    List<String> eventHeaders = [
+      'Prize Title',
+      'Quantity',
+      'Is Top Prize',
+      'Prize ID',
+    ];
 
-    sheet.setColumnWidth(0, 30);
-    sheet.setColumnWidth(2, 10);
-    sheet.setColumnWidth(3, 10);
+    eventSheet.appendRow(eventHeaders.map((e) => TextCellValue(e)).toList());
 
-    for (var row in data) {
+    // Apply header styles
+    for (int i = 0; i < eventHeaders.length; i++) {
+      eventSheet
+          .cell(CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0))
+          .cellStyle = headerStyle;
+    }
+
+    eventSheet.setRowHeight(0, 24); // header row height
+    eventSheet.setColumnWidth(0, 30);
+    eventSheet.setColumnWidth(2, 12);
+    eventSheet.setColumnWidth(3, 10);
+
+    for (var row in eventDetail) {
       List<dynamic> eventPrizes = row['event_prizes'];
 
       for (var prize in eventPrizes) {
-        sheet.appendRow([
+        eventSheet.appendRow([
           TextCellValue(prize['prizeTitle']),
           IntCellValue(prize['quantity']),
           BoolCellValue(prize['isTopPrize']),
@@ -236,11 +265,46 @@ class DbController extends GetxController {
       }
     }
 
+    // Create a new sheet for Winners
+    var winnersSheet = excel['Winners'];
+
+    // Define Headers for Winners sheet
+    List<String> winnersHeaders = [
+      'Ticket Number',
+      'Lottery Prize',
+      'Is Claimed',
+    ];
+
+    winnersSheet
+        .appendRow(winnersHeaders.map((e) => TextCellValue(e)).toList());
+
+    // Apply header styles
+    for (int i = 0; i < winnersHeaders.length; i++) {
+      winnersSheet
+          .cell(CellIndex.indexByColumnRow(columnIndex: i, rowIndex: 0))
+          .cellStyle = headerStyle;
+    }
+
+    winnersSheet.setRowHeight(0, 24); // header row height
+    winnersSheet.setColumnWidth(0, 15);
+    winnersSheet.setColumnWidth(1, 20);
+    winnersSheet.setColumnWidth(2, 12);
+
+    for (var winner in eventWinners) {
+      winnersSheet.appendRow([
+        TextCellValue(winner['ticket_number'].toString()),
+        TextCellValue(winner['lottery_prize'].toString()),
+        BoolCellValue(winner['is_claimed']),
+      ]);
+    }
+
     final directory = await getApplicationDocumentsDirectory();
-    final filePath = '${directory.path}/${data.first['event_title']}.xlsx';
+    final filePath =
+        '${directory.path}/${eventDetail.first['event_title']}.xlsx';
     final file = File(filePath);
     await file.writeAsBytes(excel.encode()!);
     stopLoading();
+    showSuccessSnackbar(message: 'Lottery data exported to $filePath');
   }
 
   Future<void> updateLotteryEvent(
@@ -564,6 +628,43 @@ class DbController extends GetxController {
       return response.length.toString();
     } catch (e) {
       return '0'; // In case of error, return 0
+    }
+  }
+
+  Future<void> getFmisCodes({
+    bool loading = false,
+  }) async {
+    try {
+      if (loading) showLoading();
+      final response = await supabase
+          .from(fmisCodesTable)
+          .select()
+          .order('id', ascending: true);
+      fmisCodes.assignAll(
+          (response as List<dynamic>).map((e) => FmisCode.fromMap(e)).toList());
+      if (loading) stopLoading();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> addFmisCode(FmisCode fmisCode) async {
+    try {
+      showLoading();
+      await supabase.from(fmisCodesTable).insert(fmisCode.toMap());
+      stopLoading();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> deleteFmisCode(int fmisCodeId) async {
+    try {
+      showLoading();
+      await supabase.from(fmisCodesTable).delete().eq('id', fmisCodeId);
+      stopLoading();
+    } catch (e) {
+      rethrow;
     }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:estimation_list_generator/controllers/app_controller.dart';
 import 'package:estimation_list_generator/utils/app_colors.dart';
 import 'package:estimation_list_generator/utils/app_lottie.dart';
+import 'package:estimation_list_generator/utils/launch_confetti.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ class _WinnerListState extends State<WinnerList> {
   void initState() {
     // Auto-scroll when a new winner is added
     ever(dbX.lotteryWinners, (_) {
+      launchConfetti(context);
       Future.delayed(const Duration(milliseconds: 300), () {
         if (scrollController.hasClients) {
           scrollController.animateTo(

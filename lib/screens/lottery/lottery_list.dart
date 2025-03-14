@@ -17,6 +17,7 @@ import 'package:estimation_list_generator/widgets/dialogs/add_lottery_prize_item
 import 'package:estimation_list_generator/widgets/dialogs/delete_lottery_event.dart';
 import 'package:estimation_list_generator/widgets/horizontal_data.dart';
 import 'package:estimation_list_generator/widgets/scale_button.dart';
+import 'package:estimation_list_generator/widgets/searchbar/appsearchbar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -138,42 +139,8 @@ class _LotteryListState extends State<LotteryList> {
             const Gap(32),
             SizedBox(
               width: width * 0.35,
-              child: TextFormField(
+              child: Appsearchbar(
                 controller: dbX.searchController,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                ),
-                decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 16,
-                    horizontal: 20,
-                  ),
-                  hintText: 'Search...',
-                  hintStyle: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.search,
-                    color: Colors.grey,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide: const BorderSide(color: Colors.grey, width: 1),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide: const BorderSide(
-                        color: AppColors.primaryLight, width: 2),
-                  ),
-                  errorBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide: const BorderSide(color: Colors.red, width: 1),
-                  ),
-                ),
               ),
             ),
             const Gap(16),

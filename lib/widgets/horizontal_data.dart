@@ -8,6 +8,7 @@ class HorizontalData extends StatelessWidget {
   final IconData? icon;
   final String title;
   final String data;
+  final double? dataSize;
   final Future<String>? futureData; // Added futureData
 
   const HorizontalData({
@@ -15,7 +16,8 @@ class HorizontalData extends StatelessWidget {
     this.icon,
     required this.title,
     required this.data,
-    this.futureData, // Added futureData
+    this.futureData,
+    this.dataSize, // Added futureData
   });
 
   @override
@@ -79,6 +81,7 @@ class HorizontalData extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.end,
                     style: TextStyle(
+                      fontSize: dataSize,
                       color: AppColors.primaryLight,
                     ),
                   ),

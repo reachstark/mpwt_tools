@@ -56,6 +56,12 @@ class FeaturesGridView extends StatelessWidget {
             selected: appX.featureIndex.value == 5,
             onTap: () => appX.setFeatureIndex(5),
           ),
+          FeatureItem(
+            icon: FontAwesomeIcons.fileCode,
+            title: followFMIS,
+            selected: appX.featureIndex.value == 6,
+            onTap: () => appX.setFeatureIndex(6),
+          ),
         ];
 
         return Column(

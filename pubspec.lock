@@ -226,10 +226,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_confetti
-      sha256: "22fc66984c17aea73e3cd300666609c4581176c00c31d4513b1e16758f75cb08"
+      sha256: "7fd99ddaabbf6a3e8b7160513934f9aca3d82c92a2b443e24b9f171530a327c8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.4"
+    version: "0.5.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -665,7 +665,7 @@ packages:
     source: hosted
     version: "0.2.0"
   shared_preferences:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: shared_preferences
       sha256: "846849e3e9b68f3ef4b60c60cf4b3e02e9321bc7f4d8c4692cf87ffa82fc8a3a"

@@ -57,13 +57,13 @@ class AppColors {
   static const Color planRejected = Color(0xFFFF3333);
 
   List<BoxShadow> get fadeShadow {
-    return const [
+    return [
       BoxShadow(
-        color: Colors.black12,
+        color: Colors.black.withValues(alpha: 0.1),
         spreadRadius: 1,
-        blurRadius: 50,
-        offset: Offset(0, 4),
-      )
+        blurRadius: 5,
+        offset: const Offset(0, 2),
+      ),
     ];
   }
 

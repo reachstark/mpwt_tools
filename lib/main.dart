@@ -2,6 +2,7 @@ import 'package:estimation_list_generator/controllers/app_controller.dart';
 import 'package:estimation_list_generator/controllers/db_controller.dart';
 import 'package:estimation_list_generator/controllers/initializer.dart';
 import 'package:estimation_list_generator/screens/donate/donate_page.dart';
+import 'package:estimation_list_generator/screens/follow_fmis/follow_fmis.dart';
 import 'package:estimation_list_generator/screens/qr_generator/qr_code_generator.dart';
 import 'package:estimation_list_generator/screens/winner/index_winner_view.dart';
 import 'package:estimation_list_generator/utils/app_colors.dart';
@@ -211,6 +212,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 return FontAwesomeIcons.qrcode;
                               case 5:
                                 return FontAwesomeIcons.circleDollarToSlot;
+                              case 6:
+                                return FontAwesomeIcons.fileCode;
                               default:
                                 return Icons.document_scanner_rounded;
                             }
@@ -240,6 +243,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 return qrCodeGenerator;
                               case 5:
                                 return donateDeveloper;
+                              case 6:
+                                return followFMIS;
                               default:
                                 return forReviewGenerator;
                             }
@@ -284,6 +289,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Obx(
                         () {
+                          bool allowScrolling = false;
+
+                          if (appX.featureIndex.value == 6) {
+                            allowScrolling = false;
+                          } else {
+                            allowScrolling = true;
+                          }
                           Widget switchFeatureView() {
                             switch (appX.featureIndex.value) {
                               case 0:
@@ -298,6 +310,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 return const QrCodeGenerator();
                               case 5:
                                 return const DonatePage();
+                              case 6:
+                                return const FollowFmis();
                               default:
                                 return Container();
                             }
@@ -307,14 +321,19 @@ class _MyHomePageState extends State<MyHomePage> {
                             width: width * 0.63,
                             height: height - appBarHeight,
                             color: AppColors.backgroundLight,
-                            child: SingleChildScrollView(
-                              padding: appX.featureIndex.value == 5
-                                  ? null
-                                  : const EdgeInsets.symmetric(
-                                      horizontal: 16.0),
-                              physics: const BouncingScrollPhysics(),
-                              child: switchFeatureView(),
-                            ),
+                            padding: !allowScrolling
+                                ? const EdgeInsets.symmetric(horizontal: 16)
+                                : null,
+                            child: allowScrolling
+                                ? SingleChildScrollView(
+                                    padding: appX.featureIndex.value == 5
+                                        ? null
+                                        : const EdgeInsets.symmetric(
+                                            horizontal: 16.0),
+                                    physics: const BouncingScrollPhysics(),
+                                    child: switchFeatureView(),
+                                  )
+                                : switchFeatureView(),
                           );
                         },
                       ),
