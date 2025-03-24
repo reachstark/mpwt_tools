@@ -4,14 +4,15 @@ import 'package:estimation_list_generator/utils/strings.dart';
 import 'package:estimation_list_generator/widgets/dialogs/enter_username.dart';
 import 'package:estimation_list_generator/widgets/snackbar/snackbars.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AppController extends GetxController {
   static AppController get to => Get.find();
 
+  final GetStorage storage = GetStorage();
   RxString appVersion = ''.obs;
   RxInt featureIndex = 0.obs;
   RxString username = ''.obs;
@@ -81,14 +82,12 @@ class AppController extends GetxController {
   void cancelInternetConnectionListener() => internetConnection.cancel();
 
   Future<void> setUsername(String name) async {
-    final savedData = await SharedPreferences.getInstance();
-    await savedData.setString('username', name);
+    await storage.write('username', name);
     username.value = name;
   }
 
   Future<void> checkUsername() async {
-    final savedData = await SharedPreferences.getInstance();
-    username.value = savedData.getString('username') ?? '';
+    username.value = storage.read<String>('username') ?? '';
     print('USERNAME: ${username.value}');
     if (username.value.trim().isEmpty) {
       Future.delayed(

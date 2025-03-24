@@ -3,6 +3,7 @@ import 'package:estimation_list_generator/controllers/db_controller.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'dart:io';
 import 'package:window_manager/window_manager.dart';
@@ -12,6 +13,7 @@ class Initializer {
     WidgetsFlutterBinding.ensureInitialized();
     await windowManager.ensureInitialized();
     await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
+    await GetStorage.init();
 
     if (Platform.isWindows) {
       WindowManager.instance.setMinimumSize(const Size(1280, 720));

@@ -291,7 +291,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         () {
                           bool allowScrolling = false;
 
-                          if (appX.featureIndex.value == 6) {
+                          if (appX.featureIndex.value == 6 ||
+                              appX.featureIndex.value == 4) {
                             allowScrolling = false;
                           } else {
                             allowScrolling = true;

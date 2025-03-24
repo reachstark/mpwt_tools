@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 
 class DottedLine extends StatelessWidget {
+  final bool isVertical;
   final double width;
 
-  const DottedLine({super.key, required this.width});
+  const DottedLine({super.key, required this.width, this.isVertical = false});
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size(width, 0.5),
-      painter: DashPainter(),
-    );
+    if (isVertical) {
+      return CustomPaint(
+        size: Size(0.5, width),
+        painter: DashPainter(),
+      );
+    } else {
+      return CustomPaint(
+        size: Size(width, 0.5),
+        painter: DashPainter(),
+      );
+    }
   }
 }
 
