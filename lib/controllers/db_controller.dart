@@ -662,6 +662,36 @@ class DbController extends GetxController {
 
   Future<void> deleteFmisCode(int fmisCodeId) async {
     try {
+      if (fmisCodeId == 0) {
+        showErrorSnackbar(
+          message: 'Please refresh the list first then try again.',
+          action: ScaleButton(
+            onTap: () => getFmisCodes(loading: true),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.all(4),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.refresh,
+                    color: Colors.black,
+                  ),
+                  const Gap(4),
+                  const Text(
+                    'Refresh List',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  const Gap(4),
+                ],
+              ),
+            ),
+          ),
+        );
+        return;
+      }
       showLoading();
       await supabase.from(fmisCodesTable).delete().eq('id', fmisCodeId);
       // delete from local list
