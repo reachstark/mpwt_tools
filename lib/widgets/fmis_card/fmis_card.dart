@@ -1,3 +1,4 @@
+import 'package:estimation_list_generator/controllers/db_controller.dart';
 import 'package:estimation_list_generator/models/fmis_code.dart';
 import 'package:estimation_list_generator/utils/app_colors.dart';
 import 'package:estimation_list_generator/utils/copy_text.dart';
@@ -9,6 +10,7 @@ import 'package:estimation_list_generator/widgets/scale_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 
 class FmisCard extends StatefulWidget {
   final int index;
@@ -106,7 +108,7 @@ class _FmisCardState extends State<FmisCard> {
               ),
               const Gap(12),
               SizedBox(
-                width: 150,
+                width: 100,
                 child: ElevatedButton.icon(
                   onPressed: () => copyText(widget.item.fmisCode),
                   icon: const Icon(
@@ -115,6 +117,17 @@ class _FmisCardState extends State<FmisCard> {
                     color: AppColors.white,
                   ),
                   label: Text('Copy'),
+                ),
+              ),
+              const Gap(12),
+              IconButton(
+                tooltip: 'លុបគម្រោង',
+                onPressed: () =>
+                    Get.dialog(DeleteFmisDialog(item: widget.item)),
+                icon: Icon(
+                  FontAwesomeIcons.trashCan,
+                  size: 18,
+                  color: AppColors.cosmicRed,
                 ),
               ),
             ],
@@ -174,6 +187,105 @@ class _FmisCardState extends State<FmisCard> {
           const Gap(8),
         ],
       ],
+    );
+  }
+}
+
+class DeleteFmisDialog extends StatelessWidget {
+  final FmisCode item;
+  const DeleteFmisDialog({super.key, required this.item});
+
+  @override
+  Widget build(BuildContext context) {
+    final dbX = Get.find<DbController>();
+    return Dialog(
+      child: Container(
+        width: 500,
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              FontAwesomeIcons.trash,
+              color: Colors.red,
+              size: 50,
+            ),
+            const Gap(12),
+            Text(
+              'លុបព្រឹត្តការណ៍រង្វាន់?',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            const Gap(8),
+            Text(
+              'តើអ្នកប្រាកដថាចង់លុប ${item.projectId} ទេ?',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: kantumruy,
+                fontSize: 16,
+                color: Colors.black54,
+              ),
+            ),
+            const Gap(8),
+            Text(
+                'ទិន្នន័យទាំងអស់នឹងត្រូវបានលុបជាអចិន្ត្រៃយ៍ ហើយមិនអាចត្រឡប់វិញបានទេ',
+                style: TextStyle(
+                  fontFamily: kantumruy,
+                  fontSize: 14,
+                )),
+            const Gap(20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: ScaleButton(
+                    onTap: () => Get.back(),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade300,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        'បោះបង់',
+                        style: TextStyle(fontSize: 16, color: Colors.black87),
+                      ),
+                    ),
+                  ),
+                ),
+                const Gap(12),
+                Expanded(
+                  child: ScaleButton(
+                    onTap: () => dbX
+                        .deleteFmisCode(item.id)
+                        .whenComplete(() => Get.back()),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        'យល់ព្រម',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

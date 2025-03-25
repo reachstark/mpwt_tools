@@ -33,7 +33,7 @@ class _AddLotteryEventDialogState extends State<AddLotteryEventDialog> {
   final dbX = Get.find<DbController>();
 
   DateTime eventDate = DateTime.now();
-  final TextEditingController _titleController = TextEditingController();
+  final _titleController = TextEditingController();
 
   Future<void> _selectDate() async {
     final lastYear = DateTime.now().year - 1;

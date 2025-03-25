@@ -38,6 +38,13 @@ class _VerificationState extends State<Verification> {
   final dbX = Get.find<DbController>();
 
   @override
+  void dispose() {
+    pinController.dispose();
+    focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
 

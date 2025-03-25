@@ -1,4 +1,6 @@
+import 'package:estimation_list_generator/controllers/db_controller.dart';
 import 'package:estimation_list_generator/utils/app_colors.dart';
+import 'package:estimation_list_generator/utils/app_theme.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,7 @@ class FeaturesGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appX = Get.find<AppController>();
+    final dbX = Get.find<DbController>();
 
     return Obx(
       () {
@@ -61,6 +64,7 @@ class FeaturesGridView extends StatelessWidget {
             title: followFMIS,
             selected: appX.featureIndex.value == 6,
             onTap: () => appX.setFeatureIndex(6),
+            badgeCount: dbX.fmisCodes.length,
           ),
         ];
 
@@ -106,6 +110,7 @@ class FeatureItem extends StatelessWidget {
   final String title;
   final bool selected;
   final VoidCallback? onTap;
+  final int? badgeCount;
 
   const FeatureItem({
     super.key,
@@ -113,6 +118,7 @@ class FeatureItem extends StatelessWidget {
     required this.title,
     required this.selected,
     this.onTap,
+    this.badgeCount,
   });
 
   @override
@@ -126,35 +132,53 @@ class FeatureItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Stack(
-            alignment: Alignment.bottomRight,
-            children: [
-              MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 400),
-                  height: 60,
-                  width: 60,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16.0),
-                    border: Border.all(
-                      color: selected
-                          ? AppColors.primaryLight
-                          : Colors.transparent,
-                      width: clampDouble(width / 20, 2, 3),
-                    ),
-                    color: selected
-                        ? AppColors.secondaryLight
-                        : AppColors.backgroundLight,
-                  ),
-                  child: Icon(
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 400),
+              height: 60,
+              width: 60,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.0),
+                border: Border.all(
+                  color: selected ? AppColors.primaryLight : Colors.transparent,
+                  width: clampDouble(width / 20, 2, 3),
+                ),
+                color: selected
+                    ? AppColors.secondaryLight
+                    : AppColors.backgroundLight,
+              ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Icon(
                     icon,
                     size: clampDouble(width / 20, 30, 35),
                     color: selected ? Colors.white : AppColors.primaryLight,
                   ),
-                ),
+                  if (badgeCount != null && badgeCount! > 0)
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: AppColors.cosmicRed,
+                          boxShadow: blurShadow,
+                        ),
+                        child: Text(
+                          badgeCount.toString(),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
               ),
-            ],
+            ),
           ),
           const Gap(16),
           SizedBox(

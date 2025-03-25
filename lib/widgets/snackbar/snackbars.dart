@@ -1,5 +1,7 @@
 import 'package:estimation_list_generator/utils/app_colors.dart';
+import 'package:estimation_list_generator/utils/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
 void showSuccessSnackbar({
@@ -9,9 +11,8 @@ void showSuccessSnackbar({
   final snackBar = SnackBar(
     elevation: 0,
     backgroundColor: Colors.green,
-    content: Column(
+    content: Row(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
@@ -21,12 +22,16 @@ void showSuccessSnackbar({
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 10),
-        Text(
-          message,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14,
+        const Gap(16),
+        Expanded(
+          child: Text(
+            message,
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: kantumruy,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
         ),
       ],
@@ -41,13 +46,13 @@ void showSuccessSnackbar({
 void showErrorSnackbar({
   String title = 'Oops!',
   required String message,
+  Widget? action,
 }) {
   final snackBar = SnackBar(
     elevation: 0,
     backgroundColor: Colors.red,
-    content: Column(
+    content: Row(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
@@ -57,14 +62,22 @@ void showErrorSnackbar({
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 10),
-        Text(
-          message,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 14,
+        const Gap(16),
+        Expanded(
+          child: Text(
+            message,
+            style: TextStyle(
+              color: Colors.white,
+              fontFamily: kantumruy,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
         ),
+        if (action != null) ...[
+          const Gap(16),
+          action,
+        ],
       ],
     ),
   );
@@ -81,9 +94,8 @@ void showWarningSnackbar({
   final snackBar = SnackBar(
     elevation: 0,
     backgroundColor: AppColors.vibrantOrange,
-    content: Column(
+    content: Row(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
@@ -93,12 +105,14 @@ void showWarningSnackbar({
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 10),
+        const Gap(16),
         Text(
           message,
           style: TextStyle(
             color: Colors.white,
-            fontSize: 14,
+            fontFamily: kantumruy,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
           ),
         ),
       ],

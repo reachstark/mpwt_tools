@@ -36,7 +36,7 @@ class _QrCodeGeneratorState extends State<QrCodeGenerator> {
   double logoOpacity = 0.25;
   double logoSize = 0.15;
   String qrData = 'https://www.mpwt.gov.kh/kh/about-us/mission-and-vision';
-  String selectedQRSize = '475x475';
+  String selectedQRSize = '640x640';
   GlobalKey qrKey = GlobalKey();
   Color selectedColor = Color(0xFF1E2A5E);
 
@@ -48,10 +48,10 @@ class _QrCodeGeneratorState extends State<QrCodeGenerator> {
       // Determine pixelRatio based on selectedQRSize
       String qrSize = 'Small';
       double pixelRatio = 1.0; // Default
-      if (selectedQRSize == '475x475') {
+      if (selectedQRSize == '640x640') {
         pixelRatio = 2.0;
         qrSize = 'Medium';
-      } else if (selectedQRSize == '949x949') {
+      } else if (selectedQRSize == '1280x1280') {
         pixelRatio = 4.0;
         qrSize = 'Large';
       }
@@ -75,6 +75,12 @@ class _QrCodeGeneratorState extends State<QrCodeGenerator> {
     } catch (e) {
       showErrorMessage(e.toString());
     }
+  }
+
+  @override
+  void dispose() {
+    colorCodeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -162,7 +168,7 @@ class _QrCodeGeneratorState extends State<QrCodeGenerator> {
       RadioListTile(
         value: '238x238',
         groupValue: selectedQRSize,
-        title: const Text('តូច (Approximate size: 30KB)'),
+        title: const Text('តូច (320x320)'),
         onChanged: (value) {
           setState(() {
             selectedQRSize = value.toString();
@@ -170,9 +176,9 @@ class _QrCodeGeneratorState extends State<QrCodeGenerator> {
         },
       ),
       RadioListTile(
-        value: '475x475',
+        value: '640x640',
         groupValue: selectedQRSize,
-        title: const Text('មធ្យម (Approximate size: 60KB)'),
+        title: const Text('មធ្យម (640x640)'),
         onChanged: (value) {
           setState(() {
             selectedQRSize = value.toString();
@@ -180,9 +186,9 @@ class _QrCodeGeneratorState extends State<QrCodeGenerator> {
         },
       ),
       RadioListTile(
-        value: '949x949',
+        value: '1280x1280',
         groupValue: selectedQRSize,
-        title: const Text('ធំ (Approximate size: 120KB)'),
+        title: const Text('ធំ (1280x1280)'),
         onChanged: (value) {
           setState(() {
             selectedQRSize = value.toString();

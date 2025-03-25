@@ -8,9 +8,11 @@ import 'package:estimation_list_generator/models/winning_ticket.dart';
 import 'package:estimation_list_generator/utils/show_error.dart';
 import 'package:estimation_list_generator/utils/show_loading.dart';
 import 'package:estimation_list_generator/utils/strings.dart';
+import 'package:estimation_list_generator/widgets/scale_button.dart';
 import 'package:estimation_list_generator/widgets/snackbar/snackbars.dart';
 import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -662,6 +664,8 @@ class DbController extends GetxController {
     try {
       showLoading();
       await supabase.from(fmisCodesTable).delete().eq('id', fmisCodeId);
+      // delete from local list
+      fmisCodes.removeWhere((element) => element.id == fmisCodeId);
       stopLoading();
     } catch (e) {
       rethrow;

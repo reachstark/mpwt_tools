@@ -47,6 +47,12 @@ class _WinnerListViewDrawerState extends State<WinnerListViewDrawer> {
   void unfocus() => focusNode.unfocus();
 
   @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;

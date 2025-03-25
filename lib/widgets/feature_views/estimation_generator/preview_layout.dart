@@ -34,6 +34,14 @@ class _PreviewLayoutState extends State<PreviewLayout> {
   }
 
   @override
+  void dispose() {
+    projectIdController.dispose();
+    planDetailController.dispose();
+    departmentController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
