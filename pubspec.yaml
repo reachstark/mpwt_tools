@@ -52,6 +52,9 @@ flutter:
     - assets/images/
     - assets/lottie/
   fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
     - family: MoulLight
       fonts:
         - asset: assets/fonts/KhmerOS-Muol_Light.ttf

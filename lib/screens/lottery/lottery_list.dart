@@ -27,6 +27,8 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../controllers/app_controller.dart';
+
 class LotteryList extends StatefulWidget {
   const LotteryList({super.key});
 
@@ -62,6 +64,7 @@ class _LotteryListState extends State<LotteryList> {
 
   @override
   Widget build(BuildContext context) {
+    final appX = Get.find<AppController>();
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
@@ -71,7 +74,8 @@ class _LotteryListState extends State<LotteryList> {
         height: clampDouble(height * 0.07, 50, 100),
         width: width,
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color:
+              appX.isDarkMode.value ? AppColors.primaryLight : AppColors.white,
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(
@@ -93,13 +97,17 @@ class _LotteryListState extends State<LotteryList> {
               onTap: () => Navigator.pop(context),
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.primaryLight,
+                  color: appX.isDarkMode.value
+                      ? AppColors.white
+                      : AppColors.primaryLight,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
                   child: Icon(
                     FontAwesomeIcons.caretLeft,
-                    color: AppColors.white,
+                    color: appX.isDarkMode.value
+                        ? AppColors.primaryLight
+                        : AppColors.white,
                   ),
                 ),
               ),
@@ -121,7 +129,9 @@ class _LotteryListState extends State<LotteryList> {
                     targetString: 'បញ្ជីរង្វាន់',
                     style: TextStyle(
                       fontSize: clampDouble(height * 0.04, 18, 22),
-                      color: AppColors.primaryLight,
+                      color: appX.isDarkMode.value
+                          ? AppColors.white
+                          : AppColors.primaryLight,
                     ),
                   ),
                   EasyRichTextPattern(
@@ -130,7 +140,9 @@ class _LotteryListState extends State<LotteryList> {
                       fontSize: clampDouble(height * 0.04, 18, 22),
                       fontWeight: FontWeight.bold,
                       fontFamily: moulLight,
-                      color: AppColors.primaryLight,
+                      color: appX.isDarkMode.value
+                          ? AppColors.white
+                          : AppColors.primaryLight,
                     ),
                   ),
                 ],
@@ -149,7 +161,9 @@ class _LotteryListState extends State<LotteryList> {
               onTap: () async => dbX.readLotteryEvents(loading: true),
               child: Icon(
                 FontAwesomeIcons.arrowsRotate,
-                color: AppColors.primaryLight,
+                color: appX.isDarkMode.value
+                    ? AppColors.white
+                    : AppColors.primaryLight,
               ),
             ),
             const Spacer(),
@@ -185,13 +199,18 @@ class _LotteryListState extends State<LotteryList> {
         children: [
           Icon(
             FontAwesomeIcons.award,
-            color: Colors.amber,
+            color:
+                appX.isDarkMode.value ? AppColors.primaryLight : Colors.amber,
           ),
           const Gap(8),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('រង្វាន់សរុប​'),
+              Text('រង្វាន់សរុប​',
+                  style: TextStyle(
+                      color: appX.isDarkMode.value
+                          ? AppColors.primaryLight
+                          : Colors.amber)),
               Obx(
                 () => Text(
                   getPrizesCount(dbX.selectedLotteryEvent.value.eventPrizes),
@@ -222,7 +241,8 @@ class _LotteryListState extends State<LotteryList> {
                 width: max(width * 0.25, 300),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.white,
+                  color:
+                      appX.isDarkMode.value ? AppColors.black : AppColors.white,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
@@ -244,7 +264,9 @@ class _LotteryListState extends State<LotteryList> {
                         Text(
                           'ព័ត៌មានលម្អិត',
                           style: TextStyle(
-                            color: AppColors.primaryLight,
+                            color: appX.isDarkMode.value
+                                ? AppColors.white
+                                : AppColors.primaryLight,
                             fontSize: clampDouble(
                               height * 0.04,
                               18,
@@ -291,7 +313,9 @@ class _LotteryListState extends State<LotteryList> {
                   child: IconButton(
                     icon: Icon(
                       FontAwesomeIcons.pencil,
-                      color: AppColors.primaryLight,
+                      color: appX.isDarkMode.value
+                          ? AppColors.white
+                          : AppColors.primaryLight,
                     ),
                     onPressed: () => showAddLotteryEventDialog(
                       isUpdating: true,
@@ -335,10 +359,18 @@ class _LotteryListState extends State<LotteryList> {
                       Icon(
                         FontAwesomeIcons.trash,
                         size: 16,
-                        color: AppColors.primaryLight,
+                        color: appX.isDarkMode.value
+                            ? AppColors.crayolaColor
+                            : AppColors.primaryLight,
                       ),
                       const Gap(8),
-                      Text('Delete'),
+                      Text(
+                        'Delete',
+                        style: TextStyle(
+                            color: appX.isDarkMode.value
+                                ? Colors.red
+                                : AppColors.primaryLight),
+                      ),
                     ],
                   ),
                 ),
@@ -361,273 +393,283 @@ class _LotteryListState extends State<LotteryList> {
       );
     }
 
-    return Scaffold(
-      backgroundColor: AppColors.white,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildAppBar(),
-            Expanded(
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        border: Border(
-                          right: BorderSide(
-                            color: AppColors.primaryLight,
-                            width: 1,
+    return Obx(
+      () => Scaffold(
+        backgroundColor:
+            appX.isDarkMode.value ? AppColors.secondaryLight : AppColors.white,
+        body: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              buildAppBar(),
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 1,
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            right: BorderSide(
+                              color: AppColors.primaryLight,
+                              width: 1,
+                            ),
                           ),
                         ),
-                      ),
-                      child: Obx(() {
-                        final events = filteredEvents.isEmpty &&
-                                dbX.searchController.text.isEmpty
-                            ? dbX.lotteryEvents
-                            : filteredEvents;
+                        child: Obx(() {
+                          final events = filteredEvents.isEmpty &&
+                                  dbX.searchController.text.isEmpty
+                              ? dbX.lotteryEvents
+                              : filteredEvents;
 
-                        final selectedItem = dbX.selectedLotteryEvent.value;
+                          final selectedItem = dbX.selectedLotteryEvent.value;
 
-                        Widget buildNoData() {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SvgPicture.asset(
-                                svgNoData,
-                                height: Get.height / 3,
-                              ),
-                              const Gap(16),
-                              Text(
-                                'មិនមានទិន្ន័យ',
-                                style: TextStyle(
-                                  color: AppColors.primaryLight,
-                                  fontSize:
-                                      clampDouble(Get.height * 0.04, 18, 22),
+                          Widget buildNoData() {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  svgNoData,
+                                  height: Get.height / 3,
                                 ),
-                              ),
-                              const Gap(16),
-                              Text(
-                                  'សូមបន្ថែមទិន្ន័យថ្មីដោយចុចប៊ូតុងបន្ថែមនៅខាងស្តាំ'),
-                            ],
-                          );
-                        }
-
-                        if (events.isEmpty) {
-                          return buildNoData();
-                        }
-
-                        return ListView.builder(
-                          itemCount: events.length,
-                          physics: const BouncingScrollPhysics(),
-                          itemBuilder: (_, index) {
-                            final event = events[index];
-
-                            return LotteryEventCard(
-                              onTap: () {
-                                setState(() {
-                                  dbX.selectedLotteryEvent.value = event;
-                                });
-                              },
-                              isSelected: selectedItem.id == event.id,
-                              event: event,
-                              isLastItem: index == events.length - 1,
+                                const Gap(16),
+                                Text(
+                                  'មិនមានទិន្ន័យ',
+                                  style: TextStyle(
+                                    color: AppColors.primaryLight,
+                                    fontSize:
+                                        clampDouble(Get.height * 0.04, 18, 22),
+                                  ),
+                                ),
+                                const Gap(16),
+                                Text(
+                                    'សូមបន្ថែមទិន្ន័យថ្មីដោយចុចប៊ូតុងបន្ថែមនៅខាងស្តាំ'),
+                              ],
                             );
-                          },
-                        );
-                      }),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      padding: const EdgeInsets.only(
-                        top: 16,
-                        right: 32,
-                        left: 32,
-                      ),
-                      child: Obx(
-                        () {
-                          final selectedEvent = dbX.selectedLotteryEvent.value;
+                          }
 
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text(
-                                      selectedEvent.eventTitle,
-                                      style: TextStyle(
-                                        color: AppColors.primaryLight,
-                                        fontSize: clampDouble(
-                                          height * 0.04,
-                                          18,
-                                          22,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  const Gap(8),
-                                  Visibility(
-                                    visible:
-                                        dbX.selectedLotteryEvent.value.id != 0,
-                                    child: Row(
-                                      children: [
-                                        totalCount(),
-                                        const Gap(36),
-                                        ScaleButton(
-                                          onTap: () =>
-                                              showAddLotteryPrizeItemDialog(
-                                            isUpdating: false,
-                                          ),
-                                          tooltip: 'បន្ថែមរង្វាន់',
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 8,
-                                              vertical: 4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                color: AppColors.primaryLight,
-                                              ),
-                                              borderRadius:
-                                                  BorderRadius.circular(100),
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  FontAwesomeIcons.circlePlus,
-                                                  color: AppColors.primaryLight,
-                                                ),
-                                                const Gap(8),
-                                                Text(
-                                                  'បន្ថែមរង្វាន់',
-                                                  style: TextStyle(
-                                                    color:
-                                                        AppColors.primaryLight,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const Gap(16),
-                              Expanded(
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                          if (events.isEmpty) {
+                            return buildNoData();
+                          }
+
+                          return ListView.builder(
+                            itemCount: events.length,
+                            physics: const BouncingScrollPhysics(),
+                            itemBuilder: (_, index) {
+                              final event = events[index];
+
+                              return LotteryEventCard(
+                                onTap: () {
+                                  setState(() {
+                                    dbX.selectedLotteryEvent.value = event;
+                                  });
+                                },
+                                isSelected: selectedItem.id == event.id,
+                                event: event,
+                                isLastItem: index == events.length - 1,
+                              );
+                            },
+                          );
+                        }),
+                      ),
+                    ),
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        padding: const EdgeInsets.only(
+                          top: 16,
+                          right: 32,
+                          left: 32,
+                        ),
+                        child: Obx(
+                          () {
+                            final selectedEvent =
+                                dbX.selectedLotteryEvent.value;
+
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
                                   children: [
                                     Expanded(
-                                      child: Obx(
-                                        () {
-                                          final eventPrizes = dbX
-                                              .selectedLotteryEvent
-                                              .value
-                                              .eventPrizes;
-
-                                          if (eventPrizes.isEmpty &&
-                                              dbX.selectedLotteryEvent.value
-                                                      .id ==
-                                                  0) {
-                                            return Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Lottie.asset(
-                                                  AppLottie.attentionArrow,
-                                                  height: height / 2,
-                                                ),
-                                                const Gap(16),
-                                                Text(
-                                                  'មិនមានទិន្ន័យ',
-                                                  style: TextStyle(
-                                                    color:
-                                                        AppColors.primaryLight,
-                                                    fontSize: clampDouble(
-                                                      height * 0.04,
-                                                      18,
-                                                      22,
-                                                    ),
-                                                  ),
-                                                ),
-                                                const Gap(16),
-                                                Text(
-                                                  'សូមចុចលើធាតុណាមួយនៅខាងឆ្វេង ដើម្បីមើលទិន្នន័យ',
-                                                ),
-                                              ],
-                                            );
-                                          }
-
-                                          if (eventPrizes.isEmpty) {
-                                            return Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SvgPicture.asset(
-                                                  svgNoData,
-                                                  height: height / 3,
-                                                ),
-                                                const Gap(16),
-                                                Text(
-                                                  'មិនមានរង្វាន់ទេ',
-                                                  style: TextStyle(
-                                                    color:
-                                                        AppColors.primaryLight,
-                                                    fontSize: clampDouble(
-                                                      height * 0.04,
-                                                      18,
-                                                      22,
-                                                    ),
-                                                  ),
-                                                ),
-                                                const Gap(16),
-                                                Text(
-                                                  'បន្ថែមរង្វាន់នៅខាងស្តាំ',
-                                                ),
-                                              ],
-                                            );
-                                          }
-
-                                          return ListView.builder(
-                                            physics:
-                                                const BouncingScrollPhysics(),
-                                            padding: const EdgeInsets.only(
-                                              right: 16,
-                                              bottom: 16,
-                                            ),
-                                            itemCount: eventPrizes.length,
-                                            itemBuilder: (_, index) {
-                                              return LotteryPrizeItemCard(
-                                                index: '${index + 1}',
-                                                prize: eventPrizes[index],
-                                              );
-                                            },
-                                          );
-                                        },
+                                      child: Text(
+                                        selectedEvent.eventTitle,
+                                        style: TextStyle(
+                                          color: appX.isDarkMode.value
+                                              ? AppColors.white
+                                              : AppColors.primaryLight,
+                                          fontSize: clampDouble(
+                                            height * 0.04,
+                                            18,
+                                            22,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                    const Gap(16),
-                                    buildDetails(),
+                                    const Gap(8),
+                                    Visibility(
+                                      visible:
+                                          dbX.selectedLotteryEvent.value.id !=
+                                              0,
+                                      child: Row(
+                                        children: [
+                                          totalCount(),
+                                          const Gap(36),
+                                          ScaleButton(
+                                            onTap: () =>
+                                                showAddLotteryPrizeItemDialog(
+                                              isUpdating: false,
+                                            ),
+                                            tooltip: 'បន្ថែមរង្វាន់',
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                horizontal: 8,
+                                                vertical: 4,
+                                              ),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: AppColors.primaryLight,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(100),
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Icon(
+                                                    FontAwesomeIcons.circlePlus,
+                                                    color:
+                                                        AppColors.primaryLight,
+                                                  ),
+                                                  const Gap(8),
+                                                  Text(
+                                                    'បន្ថែមរង្វាន់',
+                                                    style: TextStyle(
+                                                      color: AppColors
+                                                          .primaryLight,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ],
                                 ),
-                              ),
-                            ],
-                          );
-                        },
+                                const Gap(16),
+                                Expanded(
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Obx(
+                                          () {
+                                            final eventPrizes = dbX
+                                                .selectedLotteryEvent
+                                                .value
+                                                .eventPrizes;
+
+                                            if (eventPrizes.isEmpty &&
+                                                dbX.selectedLotteryEvent.value
+                                                        .id ==
+                                                    0) {
+                                              return Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Lottie.asset(
+                                                    AppLottie.attentionArrow,
+                                                    height: height / 2,
+                                                  ),
+                                                  const Gap(16),
+                                                  Text(
+                                                    'មិនមានទិន្ន័យ',
+                                                    style: TextStyle(
+                                                      color: AppColors
+                                                          .primaryLight,
+                                                      fontSize: clampDouble(
+                                                        height * 0.04,
+                                                        18,
+                                                        22,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const Gap(16),
+                                                  Text(
+                                                    'សូមចុចលើធាតុណាមួយនៅខាងឆ្វេង ដើម្បីមើលទិន្នន័យ',
+                                                  ),
+                                                ],
+                                              );
+                                            }
+
+                                            if (eventPrizes.isEmpty) {
+                                              return Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  SvgPicture.asset(
+                                                    svgNoData,
+                                                    height: height / 3,
+                                                  ),
+                                                  const Gap(16),
+                                                  Text(
+                                                    'មិនមានរង្វាន់ទេ',
+                                                    style: TextStyle(
+                                                      color: AppColors
+                                                          .primaryLight,
+                                                      fontSize: clampDouble(
+                                                        height * 0.04,
+                                                        18,
+                                                        22,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  const Gap(16),
+                                                  Text(
+                                                    'បន្ថែមរង្វាន់នៅខាងស្តាំ',
+                                                  ),
+                                                ],
+                                              );
+                                            }
+
+                                            return ListView.builder(
+                                              physics:
+                                                  const BouncingScrollPhysics(),
+                                              padding: const EdgeInsets.only(
+                                                right: 16,
+                                                bottom: 16,
+                                              ),
+                                              itemCount: eventPrizes.length,
+                                              itemBuilder: (_, index) {
+                                                return LotteryPrizeItemCard(
+                                                  index: '${index + 1}',
+                                                  prize: eventPrizes[index],
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                      const Gap(16),
+                                      buildDetails(),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

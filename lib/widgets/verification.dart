@@ -53,17 +53,23 @@ class _VerificationState extends State<Verification> {
       height: 56,
       textStyle: TextStyle(
         fontSize: 20,
-        color: AppColors.primaryLight,
+        color: appX.isDarkMode.value ? AppColors.white : AppColors.primaryLight,
         fontWeight: FontWeight.w600,
       ),
       decoration: BoxDecoration(
-        border: Border.all(color: AppColors.primaryLight),
+        border: Border.all(
+            color: appX.isDarkMode.value
+                ? AppColors.white
+                : AppColors.primaryLight),
         borderRadius: BorderRadius.circular(16),
       ),
     );
 
     final errorPinTheme = defaultPinTheme.copyDecorationWith(
-      border: Border.all(color: AppColors.darkerRed),
+      border: Border.all(
+          color: appX.isDarkMode.value
+              ? AppColors.cosmicRed
+              : AppColors.darkerRed),
     );
 
     Widget switchButton() {
@@ -89,74 +95,83 @@ class _VerificationState extends State<Verification> {
       );
     }
 
-    return Dialog(
-      backgroundColor: AppColors.white,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (dbX.masterKey.value.isEmpty) ...[],
-            if (dbX.masterKey.value.isNotEmpty) ...[
-              Icon(
-                pinController.text == dbX.masterKey.value
-                    ? Icons.check_circle_rounded
-                    : Icons.lock_rounded,
-                color: AppColors.primaryLight,
-                size: height / 6,
-              ),
-              const Gap(16),
-              Text(
-                'បញ្ចូលលេខកូដដើម្បីបន្ត',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: AppColors.primaryLight,
+    return Obx(
+      () => Dialog(
+        backgroundColor:
+            appX.isDarkMode.value ? AppColors.primaryLight : AppColors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (dbX.masterKey.value.isEmpty) ...[],
+              if (dbX.masterKey.value.isNotEmpty) ...[
+                Icon(
+                  pinController.text == dbX.masterKey.value
+                      ? Icons.check_circle_rounded
+                      : Icons.lock_rounded,
+                  color: appX.isDarkMode.value
+                      ? AppColors.white
+                      : AppColors.primaryLight,
+                  size: height / 6,
                 ),
-              ),
-              const Gap(16),
-              Pinput(
-                controller: pinController,
-                focusNode: focusNode,
-                length: int.parse(dbX.masterKey.value).toString().length,
-                autofocus: true,
-                obscureText: true,
-                obscuringCharacter: '*',
-                defaultPinTheme: defaultPinTheme,
-                errorPinTheme: errorPinTheme,
-                errorTextStyle: const TextStyle(
-                  color: AppColors.darkerRed,
+                const Gap(16),
+                Text(
+                  'បញ្ចូលលេខកូដដើម្បីបន្ត',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: appX.isDarkMode.value
+                        ? AppColors.white
+                        : AppColors.primaryLight,
+                  ),
                 ),
-                onCompleted: (value) => setState(() {}),
-                onChanged: (value) async {
-                  if (value == dbX.masterKey.value) {
-                    Future.delayed(
-                      const Duration(milliseconds: 300),
-                      () => Get.back(),
-                    ).whenComplete(
-                      () => Get.to(
-                        () => widget.type == VerificationType.lotteryEvent
-                            ? const LotteryList()
-                            : const WinnerListAdmin(),
-                        transition: Transition.cupertino,
-                        duration: const Duration(milliseconds: 300),
-                      ),
-                    );
-                  }
-                },
-                validator: (value) {
-                  if (value != dbX.masterKey.value) {
-                    return 'លេខកូដមិនត្រឹមត្រូវ';
-                  }
-                  return null;
-                },
-              ),
+                const Gap(16),
+                Pinput(
+                  controller: pinController,
+                  focusNode: focusNode,
+                  length: int.parse(dbX.masterKey.value).toString().length,
+                  autofocus: true,
+                  obscureText: true,
+                  obscuringCharacter: '*',
+                  defaultPinTheme: defaultPinTheme,
+                  errorPinTheme: errorPinTheme,
+                  errorTextStyle: TextStyle(
+                    color: appX.isDarkMode.value
+                        ? AppColors.cosmicRed
+                        : AppColors.darkerRed,
+                  ),
+                  onCompleted: (value) => setState(() {}),
+                  onChanged: (value) async {
+                    if (value == dbX.masterKey.value) {
+                      Future.delayed(
+                        const Duration(milliseconds: 300),
+                        () => Get.back(),
+                      ).whenComplete(
+                        () => Get.to(
+                          () => widget.type == VerificationType.lotteryEvent
+                              ? const LotteryList()
+                              : const WinnerListAdmin(),
+                          transition: Transition.cupertino,
+                          duration: const Duration(milliseconds: 300),
+                        ),
+                      );
+                    }
+                  },
+                  validator: (value) {
+                    if (value != dbX.masterKey.value) {
+                      return 'លេខកូដមិនត្រឹមត្រូវ';
+                    }
+                    return null;
+                  },
+                ),
+                const Gap(16),
+                switchButton(),
+              ],
               const Gap(16),
-              switchButton(),
             ],
-            const Gap(16),
-          ],
+          ),
         ),
       ),
     );

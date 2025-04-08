@@ -79,6 +79,7 @@ class AppTheme {
     /// PROGRESS INDICATOR
     progressIndicatorTheme: const ProgressIndicatorThemeData(
       color: AppColors.primaryLight,
+      linearTrackColor: AppColors.backgroundLight,
       year2023: false,
     ),
 
@@ -201,7 +202,7 @@ class AppTheme {
             if (states.contains(WidgetState.selected)) {
               return AppColors.white;
             } else {
-              return AppColors.secondaryDark;
+              return AppColors.secondaryLight;
             }
           },
         ),
@@ -234,197 +235,18 @@ class AppTheme {
   static ThemeData darkTheme = ThemeData(
     fontFamily: dangrek,
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: AppColors.backgroundDark,
+    scaffoldBackgroundColor: AppColors.backgroundLight,
     useMaterial3: true,
-    colorScheme: const ColorScheme.dark(primary: AppColors.primaryDark),
-
-    /// BOTTOM SHEET
-    bottomSheetTheme: const BottomSheetThemeData(
-      backgroundColor: AppColors.backgroundDark,
-    ),
-
-    /// DROPDOWNMENU
-    dropdownMenuTheme: const DropdownMenuThemeData(
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        hintStyle: TextStyle(
-          color: Colors.white54,
-        ),
-      ),
-      menuStyle: MenuStyle(
-        backgroundColor: WidgetStatePropertyAll(
-          AppColors.backgroundDark,
-        ),
-      ),
-    ),
-    popupMenuTheme: const PopupMenuThemeData(
-      color: AppColors.backgroundDark,
-      elevation: 0.0,
-    ),
-
-    /// APP BAR
-    appBarTheme: const AppBarTheme(
-      centerTitle: true,
-      backgroundColor: AppColors.backgroundDark,
-    ),
-
-    /// DATE PICKER
-    datePickerTheme: const DatePickerThemeData(
-      backgroundColor: AppColors.backgroundDark,
-      headerBackgroundColor: AppColors.secondaryDark,
-      dividerColor: AppColors.backgroundDark,
-    ),
-
-    /// NAVIGATION BAR
-    navigationBarTheme: const NavigationBarThemeData(
-      indicatorColor: AppColors.secondaryDark,
-      labelTextStyle: WidgetStatePropertyAll(
-        TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
-        ),
-      ),
-    ),
-
-    /// FLOATING ACTION BUTTON
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: AppColors.secondaryDark,
-      foregroundColor: AppColors.white,
-    ),
-
-    /// SWITCH
-    switchTheme: const SwitchThemeData(
-      thumbColor: WidgetStatePropertyAll(
-        AppColors.secondaryDark,
-      ),
-      trackColor: WidgetStatePropertyAll(
-        AppColors.primaryDark,
-      ),
-      trackOutlineColor: WidgetStateColor.transparent,
-    ),
-
-    /// ELEVATED BUTTON
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.secondaryDark,
-        foregroundColor: AppColors.white,
-      ),
-    ),
-
-    /// SEARCH BAR
-    searchBarTheme: const SearchBarThemeData(
-      backgroundColor: WidgetStatePropertyAll(AppColors.secondaryDark),
-      textStyle: WidgetStatePropertyAll(
-        TextStyle(
-          color: AppColors.backgroundLight,
-        ),
-      ),
-      hintStyle: WidgetStatePropertyAll(
-        TextStyle(
-          color: AppColors.primaryDark,
-        ),
-      ),
-    ),
-
-    /// TEXT BUTTON
-    textButtonTheme: const TextButtonThemeData(
-      style: ButtonStyle(
-        overlayColor: WidgetStatePropertyAll(AppColors.primaryDark),
-        foregroundColor: WidgetStatePropertyAll(
-          AppColors.primaryDark,
-        ),
-      ),
-    ),
-
-    // TEXT INPUT DECORATION
-    inputDecorationTheme: const InputDecorationTheme(
-      prefixIconColor: AppColors.primaryDark,
-      labelStyle: TextStyle(
-        color: AppColors.primaryDark,
-        fontWeight: FontWeight.bold,
-      ),
-      hintStyle: TextStyle(
-        color: Colors.white54,
-      ),
-      filled: true,
-      fillColor: AppColors.secondaryDark,
-      border: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8))),
-    ),
-
-    /// PROGRESS INDICATOR
-    progressIndicatorTheme: const ProgressIndicatorThemeData(
-      color: AppColors.secondaryDark,
-      linearTrackColor: AppColors.primaryDark,
-      year2023: false,
-    ),
-
-    /// CHECKBOX
-    checkboxTheme: const CheckboxThemeData(
-      fillColor: WidgetStatePropertyAll(AppColors.primaryDark),
-      shape: CircleBorder(
-        side: BorderSide(
-          color: AppColors.secondaryDark,
-        ),
-      ),
-    ),
-
-    /// CARD
-    cardColor: AppColors.secondaryDark,
-
-    /// DIALOG
-    dialogTheme: const DialogTheme(
-      elevation: 0.0,
-      backgroundColor: AppColors.backgroundDark,
-      titleTextStyle: TextStyle(
-        color: AppColors.primaryDark,
-        fontWeight: FontWeight.bold,
-        fontSize: 25,
-      ),
-    ),
-
-    /// SLIDER
-    sliderTheme: SliderThemeData(
-      thumbColor: AppColors.secondaryDark,
-      activeTrackColor: AppColors.primaryDark,
-      secondaryActiveTrackColor: AppColors.secondaryDark.withOpacity(0.5),
-      overlayColor: AppColors.primaryDark.withOpacity(0.3),
-    ),
-
-    /// SEGMENTED BUTTON
-    segmentedButtonTheme: SegmentedButtonThemeData(
-      style: ButtonStyle(
-        backgroundColor: WidgetStateProperty.resolveWith<Color>(
-          (Set<WidgetState> states) {
-            if (states.contains(WidgetState.selected)) {
-              return AppColors.backgroundLight;
-            } else {
-              return Colors.transparent;
-            }
-          },
-        ),
-        foregroundColor: WidgetStateProperty.resolveWith<Color>(
-          (Set<WidgetState> states) {
-            if (states.contains(WidgetState.selected)) {
-              return AppColors.secondaryDark;
-            } else {
-              return Colors.white;
-            }
-          },
-        ),
-      ),
-    ),
-
-    /// LIST TILE
-    listTileTheme: const ListTileThemeData(
-      tileColor: AppColors.secondaryDark,
-    ),
-
-    /// TIMER PICKER
-    timePickerTheme: const TimePickerThemeData(
-      dialHandColor: AppColors.primaryDark,
-      // hourMinuteColor: AppColors.secondaryDark,
-      dayPeriodColor: AppColors.primaryDark,
+    colorScheme: const ColorScheme.dark(
+      primary: AppColors.primaryLight,
+      secondary: AppColors.secondaryLight,
+      surface: AppColors.backgroundLight,
+      error: AppColors.cosmicRed, // Define an error color
+      onPrimary: AppColors.backgroundLight, // Text/icon color on primary color
+      onSecondary:
+          AppColors.backgroundLight, // Text/icon color on secondary color
+      onSurface: AppColors.white, // Text/icon color on background color
+      onError: AppColors.backgroundLight, // Text/icon color on error color
     ),
   );
 }

@@ -37,6 +37,7 @@ class PaperLayout extends StatelessWidget {
                   fontSize: 14,
                   fontFamily: moulLight,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black,
                   decorationColor: Colors.black,
                   decoration: TextDecoration.underline,
                 ),
@@ -48,6 +49,7 @@ class PaperLayout extends StatelessWidget {
                   fontSize: 14,
                   fontFamily: moulLight,
                   fontWeight: FontWeight.bold,
+                  color: Colors.black,
                   decorationColor: Colors.black,
                   decoration: TextDecoration.underline,
                 ),
@@ -99,6 +101,7 @@ class PaperLayout extends StatelessWidget {
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             fontFamily: siemreap,
+                            color: Colors.black,
                           ),
                         ),
                         Text(
@@ -106,6 +109,7 @@ class PaperLayout extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 14,
                             fontFamily: siemreap,
+                            color: Colors.black,
                           ),
                         ),
                       ],

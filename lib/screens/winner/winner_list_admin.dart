@@ -456,15 +456,6 @@ class _WinnerListAdminState extends State<WinnerListAdmin> {
               ),
             ),
             const Spacer(),
-            ScaleButton(
-              tooltip: 'ទាញយកទិន្ន័យចុងក្រោយ',
-              onTap: () => dbX.readLotteryEvents(loading: true),
-              child: Icon(
-                FontAwesomeIcons.arrowsRotate,
-                color: AppColors.primaryLight,
-              ),
-            ),
-            const Gap(16),
           ],
         ),
       );
@@ -665,6 +656,79 @@ class _WinnerListAdminState extends State<WinnerListAdmin> {
                       ),
                     ],
                   ),
+                  const Gap(16),
+                  if (selectedEvent != null) ...[
+                    Row(
+                      children: [
+                        Text(
+                          'វឌ្ឍនភាព',
+                          style: TextStyle(
+                            fontSize: clampDouble(height * 0.04, 14, 16),
+                            color: AppColors.primaryLight,
+                          ),
+                        ),
+                        const Gap(8),
+                        ScaleButton(
+                          tooltip: 'Refresh winners progress',
+                          onTap: () => dbX.readLotteryWinners(loading: true),
+                          child: Icon(
+                            FontAwesomeIcons.arrowRotateLeft,
+                            color: AppColors.primaryLight,
+                            size: clampDouble(height * 0.04, 14, 16),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Gap(8),
+                    Obx(
+                      () {
+                        double calculateProgressRatio() {
+                          final dbX = Get.find<DbController>();
+
+                          var totalPrizesCount = 0;
+                          for (var i = 0; i < prizes.length; i++) {
+                            totalPrizesCount += prizes[i].quantity;
+                          }
+
+                          if (totalPrizesCount == 0) {
+                            return 0.0; // Handle empty or null list
+                          }
+
+                          int eventWinners = dbX.lotteryWinners
+                              .where(
+                                (winner) =>
+                                    winner.eventId ==
+                                    dbX.selectedLotteryEvent.value.id,
+                              )
+                              .length;
+
+                          return eventWinners / totalPrizesCount;
+                        }
+
+                        return Column(
+                          children: [
+                            LinearProgressIndicator(
+                              value: calculateProgressRatio(),
+                              year2023: false,
+                            ),
+                            const Gap(8),
+                            Row(
+                              children: [
+                                Text(
+                                  '${calculateProgressRatio() * 100}%',
+                                  style: TextStyle(
+                                    fontSize:
+                                        clampDouble(height * 0.04, 14, 16),
+                                    color: AppColors.primaryLight,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
                 ],
               ),
             ),

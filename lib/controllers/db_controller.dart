@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:estimation_list_generator/controllers/app_controller.dart';
 import 'package:estimation_list_generator/models/event_prize.dart';
 import 'package:estimation_list_generator/models/fmis_code.dart';
 import 'package:estimation_list_generator/models/lottery_event.dart';
@@ -67,7 +68,7 @@ class DbController extends GetxController {
         masterKey.value = response.first['access_code'];
       }
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
     }
   }
 
@@ -186,12 +187,32 @@ class DbController extends GetxController {
       if (loading) showLoading();
       final response = await supabase.from(lotteryEventsTable).select();
 
+      lotteryEvents.clear();
+
       lotteryEvents.value = (response as List<dynamic>)
           .map((data) => LotteryEvent.fromMap(data))
           .toList();
       if (loading) stopLoading();
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
+    }
+  }
+
+  void readLotteryWinners({
+    bool loading = false,
+  }) async {
+    try {
+      if (loading) showLoading();
+      final response = await supabase.from(lotteryWinnersTable).select();
+
+      lotteryWinners.clear();
+
+      lotteryWinners.value = (response as List<dynamic>)
+          .map((data) => LotteryWinner.fromMap(data))
+          .toList();
+      if (loading) stopLoading();
+    } catch (e) {
+      return showErrorMessage(e.toString());
     }
   }
 
@@ -326,7 +347,7 @@ class DbController extends GetxController {
 
       stopLoading();
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
     }
   }
 
@@ -474,7 +495,7 @@ class DbController extends GetxController {
 
       stopLoading();
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
     }
   }
 
@@ -517,7 +538,7 @@ class DbController extends GetxController {
 
       if (loading) stopLoading();
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
     }
   }
 
@@ -534,7 +555,7 @@ class DbController extends GetxController {
           .map((e) => LotteryWinner.fromMap(e))
           .toList());
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
     }
   }
 
@@ -567,7 +588,7 @@ class DbController extends GetxController {
             'Error updating lottery winner: ${response.error!.message}');
       }
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
     }
   }
 
@@ -580,7 +601,7 @@ class DbController extends GetxController {
             'Error deleting lottery winner: ${response.error!.message}');
       }
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
     }
   }
 
@@ -595,7 +616,7 @@ class DbController extends GetxController {
       selectedWinner.value.isClaimed = isClaimed;
       selectedWinner.refresh();
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
     }
   }
 
@@ -646,21 +667,25 @@ class DbController extends GetxController {
           (response as List<dynamic>).map((e) => FmisCode.fromMap(e)).toList());
       if (loading) stopLoading();
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
     }
   }
 
   Future<void> addFmisCode(FmisCode fmisCode) async {
+    final appX = Get.find<AppController>();
+    if (!appX.hasNetwork.value) return;
     try {
       showLoading();
       await supabase.from(fmisCodesTable).insert(fmisCode.toMap());
       stopLoading();
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
     }
   }
 
   Future<void> deleteFmisCode(int fmisCodeId) async {
+    final appX = Get.find<AppController>();
+    if (!appX.hasNetwork.value) return;
     try {
       if (fmisCodeId == 0) {
         showErrorSnackbar(
@@ -698,7 +723,7 @@ class DbController extends GetxController {
       fmisCodes.removeWhere((element) => element.id == fmisCodeId);
       stopLoading();
     } catch (e) {
-      rethrow;
+      return showErrorMessage(e.toString());
     }
   }
 }

@@ -7,7 +7,10 @@ import 'package:estimation_list_generator/widgets/scale_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../controllers/app_controller.dart';
 
 class DonatePage extends StatefulWidget {
   const DonatePage({super.key});
@@ -17,6 +20,7 @@ class DonatePage extends StatefulWidget {
 }
 
 class _DonatePageState extends State<DonatePage> {
+  final appX = Get.find<AppController>();
   String bankSelected = 'ABA';
 
   @override
@@ -34,167 +38,171 @@ class _DonatePageState extends State<DonatePage> {
       }
     }
 
-    return Column(
-      children: [
-        const Gap(32),
-        Stack(
-          alignment: Alignment.center,
-          children: [
-            Lottie.asset(
-              AppLottie.blockyBackground,
-            ),
-            Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    boxShadow: blurShadow,
-                  ),
-                  child: CircleAvatar(
-                    radius: 55,
-                    backgroundImage: AssetImage(
-                      devProfilePic,
+    return Obx(
+      () => Column(
+        children: [
+          const Gap(32),
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Lottie.asset(
+                AppLottie.blockyBackground,
+              ),
+              Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      boxShadow: blurShadow,
+                    ),
+                    child: CircleAvatar(
+                      radius: 55,
+                      backgroundImage: AssetImage(
+                        devProfilePic,
+                      ),
                     ),
                   ),
-                ),
-                const Gap(32),
-                Container(
-                  width: 580,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 8.0,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20.0),
-                    color: AppColors.white,
-                    boxShadow: blurShadow,
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(FontAwesomeIcons.circleInfo),
-                      const Gap(12),
-                      Expanded(
-                        child: Text(
-                          donateInfo,
-                          style: TextStyle(
-                            height: 1.5,
-                            fontSize: 13,
-                            fontFamily: kantumruy,
+                  const Gap(32),
+                  Container(
+                    width: 580,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 8.0,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: appX.isDarkMode.value
+                          ? Colors.black
+                          : AppColors.white,
+                      boxShadow: blurShadow,
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(FontAwesomeIcons.circleInfo),
+                        const Gap(12),
+                        Expanded(
+                          child: Text(
+                            donateInfo,
+                            style: TextStyle(
+                              height: 1.5,
+                              fontSize: 13,
+                              fontFamily: kantumruy,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const Gap(32),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(22.0),
-                    color: Colors.white30,
-                    boxShadow: blurShadow,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        height: 207,
-                        width: 207,
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: AppColors.white,
-                          border: Border.all(
-                            width: 4,
-                            color: switchSelectBankColor(),
+                  const Gap(32),
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(22.0),
+                      color: Colors.white30,
+                      boxShadow: blurShadow,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          height: 207,
+                          width: 207,
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: AppColors.white,
+                            border: Border.all(
+                              width: 4,
+                              color: switchSelectBankColor(),
+                            ),
+                            boxShadow: blurShadow,
                           ),
-                          boxShadow: blurShadow,
+                          child: Image.asset(
+                            bankSelected == 'ABA' ? devABAQR : devWingQR,
+                          ),
                         ),
-                        child: Image.asset(
-                          bankSelected == 'ABA' ? devABAQR : devWingQR,
-                        ),
-                      ),
-                      const Gap(16),
-                      Container(
-                        width: 350,
-                        padding: const EdgeInsets.all(16.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20.0),
-                          color: AppColors.white,
-                          boxShadow: blurShadow,
-                        ),
-                        child: Column(
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: buildBankButton(
-                                    bankName: 'ABA',
-                                    buttonColor: Color(0xFF004973),
-                                    onTap: () {
-                                      setState(() {
-                                        bankSelected = 'ABA';
-                                      });
-                                    },
-                                  ),
-                                ),
-                                const Gap(12),
-                                Expanded(
-                                  child: buildBankButton(
-                                      bankName: 'Wing Bank',
-                                      buttonColor: Color(0xFFa9cf38),
+                        const Gap(16),
+                        Container(
+                          width: 350,
+                          padding: const EdgeInsets.all(16.0),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0),
+                            color: AppColors.white,
+                            boxShadow: blurShadow,
+                          ),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: buildBankButton(
+                                      bankName: 'ABA',
+                                      buttonColor: Color(0xFF004973),
                                       onTap: () {
                                         setState(() {
-                                          bankSelected = 'Wing';
+                                          bankSelected = 'ABA';
                                         });
-                                      }),
-                                ),
-                              ],
-                            ),
-                            const Gap(16),
-                            HorizontalData(
-                              icon: FontAwesomeIcons.buildingColumns,
-                              title: 'Bank Name:',
-                              data: bankSelected == 'ABA'
-                                  ? 'ABA Bank'
-                                  : 'Wing Bank',
-                            ),
-                            const Gap(16),
-                            HorizontalData(
-                              icon: FontAwesomeIcons.buildingColumns,
-                              title: 'Account Number:',
-                              data: bankSelected == 'ABA'
-                                  ? '003 320 620'
-                                  : '100 940 369',
-                            ),
-                            const Gap(16),
-                            HorizontalData(
-                              icon: FontAwesomeIcons.circleUser,
-                              title: 'Account Holder Name:',
-                              data: 'LE BORITHEAREACH',
-                            ),
-                            const Gap(16),
-                            HorizontalData(
-                              icon: FontAwesomeIcons.moneyBill,
-                              title: 'Account Currency:',
-                              data: bankSelected == 'ABA' ? 'USD' : 'KHR',
-                            ),
-                          ],
+                                      },
+                                    ),
+                                  ),
+                                  const Gap(12),
+                                  Expanded(
+                                    child: buildBankButton(
+                                        bankName: 'Wing Bank',
+                                        buttonColor: Color(0xFFa9cf38),
+                                        onTap: () {
+                                          setState(() {
+                                            bankSelected = 'Wing';
+                                          });
+                                        }),
+                                  ),
+                                ],
+                              ),
+                              const Gap(16),
+                              HorizontalData(
+                                icon: FontAwesomeIcons.buildingColumns,
+                                title: 'Bank Name:',
+                                data: bankSelected == 'ABA'
+                                    ? 'ABA Bank'
+                                    : 'Wing Bank',
+                              ),
+                              const Gap(16),
+                              HorizontalData(
+                                icon: FontAwesomeIcons.buildingColumns,
+                                title: 'Account Number:',
+                                data: bankSelected == 'ABA'
+                                    ? '003 320 620'
+                                    : '100 940 369',
+                              ),
+                              const Gap(16),
+                              HorizontalData(
+                                icon: FontAwesomeIcons.circleUser,
+                                title: 'Account Holder Name:',
+                                data: 'LE BORITHEAREACH',
+                              ),
+                              const Gap(16),
+                              HorizontalData(
+                                icon: FontAwesomeIcons.moneyBill,
+                                title: 'Account Currency:',
+                                data: bankSelected == 'ABA' ? 'USD' : 'KHR',
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ],
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

@@ -10,6 +10,7 @@ const String svgNoData = 'assets/svg/undraw_no-data.svg';
 const String moulLight = 'MoulLight';
 const String siemreap = 'Siemreap';
 const String kantumruy = 'Kantumruy';
+const String roboto = 'Roboto';
 
 const supabaseUrl = 'https://qmdtiuiqbomidsbvpgth.supabase.co';
 const supabaseKey =
@@ -22,6 +23,8 @@ const String followEstimationList = 'តាមដានការងារបញ�
 const String qrCodeGenerator = 'QR Code Generator';
 const String donateDeveloper = 'បរិច្ចាគអ្នកអភិវឌ្ឍន៍';
 const String followFMIS = 'គម្រោងលេខកូដ FMIS';
+const String artificialIntelligence = 'បញ្ញាសិប្បនិម្មិត';
+const String settings = 'ការកំណត់';
 
 const String followEstimationListUrl =
     'https://docs.google.com/spreadsheets/d/1aTrlV0rCScPkgR-atlt3UbIu263oGXiVwo6I6MTc14w/edit?usp=sharing';

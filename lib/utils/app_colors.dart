@@ -5,10 +5,8 @@ class AppColors {
   static const Color backgroundLight = Color(0xFF7C93C3);
   static const Color primaryLight = Color(0xFF1E2A5E);
   static const Color secondaryLight = Color(0xFF55679C);
-  // Primary and Accent Colors (Dark)
-  static const Color backgroundDark = Color(0xFF094074);
-  static const Color primaryDark = Color(0xFF3C6997);
-  static const Color secondaryDark = Color(0xFF013a63);
+
+  static const Color tintedBlue = Color(0xFFBDD7E7);
 
   static const Color mpwtRed = Color(0xFFD00800);
   static const Color mpwtYellow = Color(0xFFF0B050);
@@ -159,24 +157,6 @@ class AppColors {
 
   static Gradient get lightGradient => const LinearGradient(
         colors: [backgroundLight, primaryLight],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      );
-
-  static Gradient get darkGradient => const LinearGradient(
-        colors: [backgroundDark, primaryDark],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      );
-
-  static Gradient get primaryGradient => const LinearGradient(
-        colors: [primaryLight, primaryDark],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      );
-
-  static Gradient get secondaryGradient => const LinearGradient(
-        colors: [secondaryLight, secondaryDark],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
